@@ -6,7 +6,7 @@ import controller.LoginController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class Photos extends Application {
@@ -16,12 +16,12 @@ public class Photos extends Application {
   throws IOException {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(getClass().getResource("/view/Login.fxml"));
-      GridPane root = (GridPane)loader.load();
+      AnchorPane root = (AnchorPane)loader.load();
       
       LoginController loginController = loader.getController();
       loginController.start(primaryStage);
       
-      Scene scene = new Scene(root, 800, 800);
+      Scene scene = new Scene(root);
       primaryStage.setScene(scene);
       primaryStage.setTitle("Photos");
       primaryStage.setResizable(false);  
