@@ -40,6 +40,7 @@ public class LoginController {
       //Just using a fake user to get the User page working. Will be replaced later by retrieving real users from UserList array.
       
       User user = new User("ExampleName");
+      user.addAlbum("Album1");
       
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(getClass().getResource("/view/User.fxml"));

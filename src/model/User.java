@@ -13,8 +13,15 @@ public class User {
     albums = new HashMap<>();
   }
   
-  public String getUsername() {
+  public String getName() {
     return name;
   }
-
+  
+  public Album getAlbum(String albumName) {
+    return albums.get(albumName);
+  }
+  
+  public void addAlbum(String albumName) {
+    albums.put(albumName, new Album(albumName));
+  }
 }

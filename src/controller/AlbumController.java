@@ -7,50 +7,32 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import model.User;
+import model.Album;
 
-public class UserController {
+public class AlbumController {
   
   @FXML private Hyperlink logout;
-  @FXML private Button tempButton;
   
   @FXML private Label headerLabel;
   
   private Stage primaryStage;
-  private User user;
+  private Album album;
   
-  public void setUser(User user) {   
-    this.user = user;    
+  public void setAlbum(Album album) {   
+    this.album = album;    
   } 
 
   public void start(Stage primaryStage) {   
     this.primaryStage = primaryStage; 
     
-    headerLabel.setText(user.getName());
-  }  
-  
-  // This method is initiated when the Temp button is pressed. This is just so we can get to an Album page
-  // without having to first implement the TableView. It will be changed later.
-  @FXML
-  private void goToAlbum(ActionEvent ae) throws IOException {
-    FXMLLoader loader = new FXMLLoader();
-    loader.setLocation(getClass().getResource("/view/Album.fxml"));
-    AnchorPane root = (AnchorPane)loader.load();
-    
-    AlbumController albumController = loader.getController();
-    albumController.setAlbum(user.getAlbum("Album1"));
-    albumController.start(primaryStage);
-    
-    primaryStage.getScene().setRoot(root);
-    primaryStage.show();  
-  }
+    headerLabel.setText(album.getName());
+  }   
 
   @FXML
   private void logout(ActionEvent ae) throws IOException {
