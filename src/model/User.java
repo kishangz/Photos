@@ -2,14 +2,13 @@ package model;
 
 import java.util.HashMap;
 
-public class User {
-  
+public class User {  
   private String name;
-  HashMap<String, Album> albums;
+  private HashMap<String, Album> albums;
 
-  public User(String name) {
+  public User(String username) {
     
-    this.name = name; 
+    this.name = username; 
     albums = new HashMap<>();
   }
   
@@ -23,5 +22,9 @@ public class User {
   
   public void addAlbum(String albumName) {
     albums.put(albumName, new Album(albumName));
+  }
+  
+  public void deleteAlbum(String albumName) {
+    albums.remove(albumName);
   }
 }

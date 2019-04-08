@@ -2,10 +2,9 @@ package model;
 
 import java.util.ArrayList;
 
-public class Album {
-  
+public class Album {  
   private String name;
-  ArrayList<Photo> photos;
+  private ArrayList<Photo> photos;
 
   public Album(String name) {
     
@@ -15,6 +14,10 @@ public class Album {
   
   public String getName() {
     return name;
+  }
+  
+  public void setName(String albumName) {
+    name = albumName;
   }
 
 }
