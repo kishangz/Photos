@@ -26,13 +26,22 @@ public class AlbumController {
   
   public void setAlbum(Album album) {   
     this.album = album;    
-  } 
+  }
+  
+  
 
   public void start(Stage primaryStage) {   
     this.primaryStage = primaryStage; 
     
     headerLabel.setText(album.getName());
-  }   
+  }
+  
+  public void startA(Album thisAlbum) {
+	  
+  }
+  
+  public static void closeAlbum() {
+	}
 
   @FXML
   private void logout(ActionEvent ae) throws IOException {

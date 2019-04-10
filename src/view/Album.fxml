@@ -40,7 +40,6 @@
                         <MenuItem mnemonicParsing="false" text="Paste" />
                      </items>
                   </MenuButton>
-                  <Button mnemonicParsing="false" text="Delete" />
                   <Button layoutX="705.0" layoutY="13.0" mnemonicParsing="false" text="Add" />
                </buttons>
             </ButtonBar>

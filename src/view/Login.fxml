@@ -18,6 +18,7 @@
             <RowConstraints />
             <RowConstraints />
             <RowConstraints prefHeight="35.0" />
+            <RowConstraints minHeight="10.0" prefHeight="35.0" />
          </rowConstraints>
          <columnConstraints>
             <ColumnConstraints maxWidth="95.0" minWidth="10.0" />
@@ -42,7 +43,10 @@
                   <Insets />
                </GridPane.margin>
             </Button>
+
             <Hyperlink fx:id="signUp" onAction="#signUp" text="Sign up" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+            <Label fx:id="errorLabel" text="Please enter a valid username." textFill="#f20808" visible="false" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+
          </children>
       </GridPane>
    </children>

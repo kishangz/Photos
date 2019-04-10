@@ -1,22 +1,27 @@
 package controller;
 
 import java.io.IOException;
+
 import java.util.HashMap;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.User;
+
 
 public class AccountController {
   
   @FXML private Button submitButton;
   @FXML private TextField accountField;
   @FXML private Button cancelButton;
+  @FXML private Label errorLabel;
   
   private Stage primaryStage;
   
@@ -69,9 +74,11 @@ public class AccountController {
       }
       
        
+    } else {
+      errorLabel.setVisible(true);
     }
     
-    // TODO Add duplicate check 
+    
     
   }
   
@@ -103,5 +110,5 @@ public class AccountController {
     }
 
   }
-
+	
 }

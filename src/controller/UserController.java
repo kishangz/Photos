@@ -54,7 +54,17 @@ public class UserController {
     this.primaryStage = primaryStage; 
     
     headerLabel.setText(user.getName());
-  }  
+  }
+  
+  /**
+   * Initializes fields every time this screen is loaded. Also loads in the albums
+   * from the user. 
+   */
+  public void startU() {
+	  
+  }
+  
+  
   
   public void setUserList(HashMap<String, User> userList) {   
     this.userList = userList;    

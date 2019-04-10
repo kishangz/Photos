@@ -99,6 +99,11 @@ public class AdminController {
         obsList.remove(listView.getSelectionModel().getSelectedItem());
     }
   }
+  
+  public void startA() {
+	  
+  }
+	
 
   @FXML
   private void logout(ActionEvent ae) throws IOException {

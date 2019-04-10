@@ -17,6 +17,7 @@
             <RowConstraints />
             <RowConstraints />
             <RowConstraints prefHeight="35.0" />
+            <RowConstraints minHeight="10.0" prefHeight="35.0" />
          </rowConstraints>
          <columnConstraints>
             <ColumnConstraints maxWidth="95.0" minWidth="10.0" />
@@ -24,6 +25,7 @@
          </columnConstraints>
          <children>
             <Label text="Username:" GridPane.rowIndex="1" />
+
             <TextField fx:id="accountField" onAction="#createAccount" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <ButtonBar GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                <buttons>
@@ -31,6 +33,7 @@
                   <Button fx:id="cancelButton" layoutX="84.0" layoutY="15.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
                </buttons>
             </ButtonBar>
+            <Label fx:id="errorLabel" text="That username already exists." textFill="#f20707" visible="false" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
          </children>
       </GridPane>
       <Label fx:id="headerLabel" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefWidth="167.0" text="Create Account" textFill="#2f2183" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="15.0">
@@ -38,5 +41,6 @@
             <Font name="Arial" size="36.0" />
          </font>
       </Label>
+
    </children>
 </AnchorPane>
