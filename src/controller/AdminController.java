@@ -22,6 +22,15 @@ public class AdminController {
   public void start(Stage primaryStage) {   
     this.primaryStage = primaryStage;    
   }
+  
+  /**
+   * Initializes fields every time this screen is loaded. Also loads in the albums
+   * from the user. 
+   */
+  public void startA() {
+	  
+  }
+	
 
   @FXML
   private void logout(ActionEvent ae) throws IOException {

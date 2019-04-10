@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -15,6 +16,8 @@ public class LoginController {
   
   @FXML private Button loginButton;
   @FXML private TextField loginField;
+  
+  @FXML private Hyperlink signup;
   
   private Stage primaryStage;
 
@@ -54,5 +57,21 @@ public class LoginController {
       primaryStage.show();      
     }
   }
+  
+  @FXML
+  private void goToSignup(ActionEvent ae) throws IOException{
+	  
+	  FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(getClass().getResource("/view/Account.fxml"));
+      
+      AnchorPane root = (AnchorPane)loader.load();
+      AccountController accountController  = loader.getController();
+      
+      accountController.start(primaryStage);
+      
+      primaryStage.getScene().setRoot(root);
+      primaryStage.show();
+  }
+
 
 }

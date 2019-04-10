@@ -42,7 +42,7 @@
                   <Insets />
                </GridPane.margin>
             </Button>
-            <Hyperlink text="Sign up" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+            <Hyperlink fx:id="signup" onAction="#goToSignup" text="Sign up" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
          </children>
       </GridPane>
    </children>

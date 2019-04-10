@@ -1,10 +1,12 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class Album {  
+public class Album {
+  
   private String name;
-  private ArrayList<Photo> photos;
+  ArrayList<Photo> photos;
 
   public Album(String name) {
     
@@ -12,12 +14,12 @@ public class Album {
     photos = new ArrayList<>();
   }
   
+  public List<Photo> getPhotos() {
+	  return photos;
+	}
+  
   public String getName() {
     return name;
-  }
-  
-  public void setName(String albumName) {
-    name = albumName;
   }
 
 }

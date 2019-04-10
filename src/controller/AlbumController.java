@@ -10,10 +10,13 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Album;
+import model.Tag;
 
 public class AlbumController {
   
@@ -26,13 +29,22 @@ public class AlbumController {
   
   public void setAlbum(Album album) {   
     this.album = album;    
-  } 
+  }
+  
+  
 
   public void start(Stage primaryStage) {   
     this.primaryStage = primaryStage; 
     
     headerLabel.setText(album.getName());
-  }   
+  }
+  
+  public void startA(Album thisAlbum) {
+	  
+  }
+  
+  public static void closeAlbum() {
+	}
 
   @FXML
   private void logout(ActionEvent ae) throws IOException {

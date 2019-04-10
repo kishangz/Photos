@@ -34,7 +34,17 @@ public class UserController {
     this.primaryStage = primaryStage; 
     
     headerLabel.setText(user.getName());
-  }  
+  }
+  
+  /**
+   * Initializes fields every time this screen is loaded. Also loads in the albums
+   * from the user. 
+   */
+  public void startU() {
+	  
+  }
+  
+  
   
   // This method is initiated when the Temp button is pressed. This is just so we can get to an Album page
   // without having to first implement the TableView. It will be changed later.
