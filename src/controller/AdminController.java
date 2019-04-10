@@ -23,10 +23,6 @@ public class AdminController {
     this.primaryStage = primaryStage;    
   }
   
-  /**
-   * Initializes fields every time this screen is loaded. Also loads in the albums
-   * from the user. 
-   */
   public void startA() {
 	  
   }

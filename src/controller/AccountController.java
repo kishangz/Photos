@@ -100,11 +100,10 @@ public class AccountController {
 				setUser(userLoggingIn);
 				if (userString.equals("admin")) {
 					
-					//loader.setLocation(getClass().getResource("/view/User.fxml"));
-					loginField.clear(); //clears login text 
+					//loginField.clear(); //clears login text 
 				} else {
 					//toUser();
-					loginField.clear();
+					//loginField.clear();
 					
 				}
 			} else {
