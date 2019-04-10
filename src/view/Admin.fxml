@@ -28,6 +28,12 @@
             <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
+            <ButtonBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="45.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <buttons>
+                  <Button fx:id="deleteButton" disable="true" mnemonicParsing="false" onAction="#delete" text="Delete" />
+                  <Button fx:id="addButton" layoutX="705.0" layoutY="13.0" mnemonicParsing="false" onAction="#add" text="Add" />
+               </buttons>
+            </ButtonBar>
             <Hyperlink fx:id="logout" onAction="#logout" text="Logout" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
             <Label alignment="CENTER" text="Admin" textFill="#2f2183" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                <font>
@@ -37,13 +43,7 @@
                   <Insets />
                </GridPane.margin>
             </Label>
-            <ButtonBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="45.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <buttons>
-                  <Button mnemonicParsing="false" text="Delete" />
-                  <Button layoutX="705.0" layoutY="13.0" mnemonicParsing="false" text="Add" />
-               </buttons>
-            </ButtonBar>
-            <ListView prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
    </children>
