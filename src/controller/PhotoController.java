@@ -50,6 +50,13 @@ public class PhotoController {
 	Photo currentPhoto;
 	
 	/**
+     * photo list ArrayList<photo>
+     */
+	private ArrayList<Photo> thisPhotoList = new ArrayList<Photo>();
+	
+	private int i = 0;
+	
+	/**
 	 * The button that shows the previous photo in the album
 	 */
 	@FXML private Button prevPhotoB;
@@ -97,11 +104,13 @@ public class PhotoController {
 	 * @param firstViewed The photo the program will begin with viewing
 	 * @param currentAlbum the current album being viewed
 	 */
-	public void start(Photo firstViewed, Album currentAlbum) {
+	public void start(ArrayList<Photo> photoList, Album currentAlbum) {
 		tagTxtArea.setWrapText(true);
 		captionTxtArea.setWrapText(true);
 		
-		currentPhoto = firstViewed;
+		thisPhotoList = photoList;
+		
+		currentPhoto = thisPhotoList.get(i);
 		this.currentAlbum = currentAlbum;
 		
 		albumLabel.setText("Album: " + currentAlbum.getName());
@@ -117,8 +126,9 @@ public class PhotoController {
 	 */
 	@FXML public void prevPhoto(ActionEvent e) {
 		
-		int currentIndx = currentAlbum.getPhotos().indexOf(currentPhoto);
-		currentPhoto = currentAlbum.getPhotos().get(currentIndx - 1);
+		i = i - 1;
+		
+		currentPhoto = currentAlbum.getListOfPhotos().get(i);
 		
 		updateWidgets();
 		checkForPrev();
@@ -131,8 +141,8 @@ public class PhotoController {
 	 */
 	@FXML public void nextPhoto(ActionEvent e) {
 		
-		int currentIndx = currentAlbum.getPhotos().indexOf(currentPhoto);
-		currentPhoto = currentAlbum.getPhotos().get(currentIndx + 1);
+		i = i + 1;
+		currentPhoto = currentAlbum.getListOfPhotos().get(i);
 		
 		updateWidgets();
 		checkForNext();
@@ -215,7 +225,7 @@ public class PhotoController {
 	}
 	
 	private void checkForPrev() {
-		if(currentAlbum.getPhotos().indexOf(currentPhoto) == 0) {
+		if(currentAlbum.getListOfPhotos().get(i - 1) == null) {
 			prevPhotoB.setDisable(true);
 		} else {
 			prevPhotoB.setDisable(false);
@@ -223,7 +233,7 @@ public class PhotoController {
 	}
 	private void checkForNext() {
 
-		if(currentAlbum.getPhotos().indexOf(currentPhoto) == currentAlbum.getPhotos().size() - 1) {
+		if(currentAlbum.getListOfPhotos().get(i + 1) == null) {
 			nextPhotoB.setDisable(true);
 		} else {
 			nextPhotoB.setDisable(false);
@@ -233,7 +243,7 @@ public class PhotoController {
 	private void updateWidgets() {
 		prepareImageView();
 		
-		dateLabel.setText("Date: " + currentPhoto.getDate().getTime().toString());
+		dateLabel.setText("Date: " + currentPhoto.getDate().toString());
 		String tagsText = "";
 		
 		if(!currentPhoto.getTags().isEmpty()) {

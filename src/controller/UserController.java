@@ -13,6 +13,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -24,9 +26,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Album;
 import model.User;
+import model.UsersList;
 
 public class UserController {
   
@@ -85,7 +89,7 @@ public class UserController {
     obsList.addAll(set);
     table.setItems(obsList);
     albumCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getName()));
-    quantityCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getNumPhotos()));
+    quantityCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getAlbumSize()));
     
     table.getSelectionModel().selectFirst();
     
@@ -109,6 +113,41 @@ public class UserController {
           }
         }
     });     
+
+primaryStage.setOnCloseRequest(event -> {
+		
+		
+		try {
+			 UsersList.save(LoginController.userList.getUserList());
+		 } catch (IOException er) {
+			 // TODO Auto-generated catch block
+			 er.printStackTrace();
+		 }
+		 
+		 
+		 FXMLLoader loader = new FXMLLoader();
+		 loader.setLocation(getClass().getResource("/view/Login.fxml"));
+		 
+		 Parent root=null;
+		try {
+			root = loader.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 Stage stage = new Stage();
+
+		 LoginController listController = loader.getController();
+
+
+		 stage.initModality(Modality.APPLICATION_MODAL);
+		 stage.setOpacity(1);
+		 stage.setTitle("Login");
+		 stage.setScene(new Scene(root, 453, 357));
+		 stage.show();
+	    // Save file
+	});
+
     
   }
   
@@ -133,6 +172,7 @@ public class UserController {
     AnchorPane root = (AnchorPane)loader.load();
     
     AlbumController albumController = loader.getController();
+
     albumController.setAlbum(table.getSelectionModel().getSelectedItem());
     albumController.start(primaryStage);
     
