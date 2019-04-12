@@ -21,6 +21,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.User;
+import model.UsersList;
 
 public class AdminController {
   
@@ -65,11 +66,21 @@ public class AdminController {
               
           }
         }
-    });     
+    });
+    
+    primaryStage.setOnCloseRequest(event -> {
+		
+		
+		try {
+			 UsersList.save(LoginController.userList.getUserList());
+		 } catch (IOException er) {
+			 // TODO Auto-generated catch block
+			 er.printStackTrace();
+		 }
+		 
+	});
     
   }
-  
-  
   
   @FXML
   void add(ActionEvent event) throws IOException {
@@ -112,7 +123,15 @@ public class AdminController {
     alert.initOwner(primaryStage);
             
     Optional<ButtonType> result = alert.showAndWait();
-    if (result.isPresent() && result.get() == ButtonType.OK) {  
+    if (result.isPresent() && result.get() == ButtonType.OK) {
+    	
+		try {
+			 UsersList.save(LoginController.userList.getUserList());
+		 } catch (IOException er) {
+			 // TODO Auto-generated catch block
+			 er.printStackTrace();
+		 }
+		
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(getClass().getResource("/view/Login.fxml"));
       AnchorPane root = (AnchorPane)loader.load();

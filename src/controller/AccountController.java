@@ -58,7 +58,7 @@ public class AccountController {
     	  Alert alert2 = new Alert(AlertType.INFORMATION);
     	  alert2.setTitle("Information Dialog");
     	  alert2.setHeaderText(null);
-    	  alert2.setContentText("Who's going to enter the UserName ma man!");
+    	  alert2.setContentText("Enter a Username");
     	  alert2.showAndWait();
       }
       else if(LoginController.userList.getUserList() != null && LoginController.userList.getUserList().containsKey(id))
@@ -66,7 +66,7 @@ public class AccountController {
     	  Alert alert2 = new Alert(AlertType.INFORMATION);
     	  alert2.setTitle("Information Dialog");
     	  alert2.setHeaderText(null);
-    	  alert2.setContentText("too bad!! someone alread stole this name!");
+    	  alert2.setContentText("UserName already exists!");
     	  alert2.showAndWait();
     	  accountField.clear();
       }

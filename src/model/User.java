@@ -15,17 +15,13 @@ public class User implements Serializable, Comparable<User> {
 	private String userKey;
 	
 	private HashMap<String, Album> albumHashmap; // id,album
-	
-	public HashMap<String,ArrayList<Tag>> tagHashMap;
-	
-	public HashMap<String,Photo> userPhotoHashMap;
+
 	
 	public User(String key, String name) {
 		this.name = name;
 		this.userKey = key;
 		albumHashmap = new HashMap<String, Album>();
-		tagHashMap = new HashMap<String, ArrayList<Tag>>();
-		userPhotoHashMap = new HashMap<String,Photo>();
+		
 	}
 	
 	/*

@@ -46,28 +46,6 @@ public class LoginController {
 			 er.printStackTrace();
 		 }
 		 
-		 
-		 FXMLLoader loader = new FXMLLoader();
-		 loader.setLocation(getClass().getResource("/view/Login.fxml"));
-		 
-		 Parent root=null;
-		try {
-			root = loader.load();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		 Stage stage = new Stage();
-
-		 LoginController listController = loader.getController();
-
-
-		 stage.initModality(Modality.APPLICATION_MODAL);
-		 stage.setOpacity(1);
-		 stage.setTitle("Login");
-		 stage.setScene(new Scene(root, 453, 357));
-		 stage.show();
-	    // Save file
 	});
     
   }
