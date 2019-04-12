@@ -7,6 +7,8 @@ import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -16,9 +18,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Album;
 import model.User;
+import model.UsersList;
 
 public class UserController {
   
@@ -54,6 +58,41 @@ public class UserController {
     this.primaryStage = primaryStage; 
     
     headerLabel.setText(user.getName());
+    
+primaryStage.setOnCloseRequest(event -> {
+		
+		
+		try {
+			 UsersList.save(LoginController.userList.getUserList());
+		 } catch (IOException er) {
+			 // TODO Auto-generated catch block
+			 er.printStackTrace();
+		 }
+		 
+		 
+		 FXMLLoader loader = new FXMLLoader();
+		 loader.setLocation(getClass().getResource("/view/Login.fxml"));
+		 
+		 Parent root=null;
+		try {
+			root = loader.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 Stage stage = new Stage();
+
+		 LoginController listController = loader.getController();
+
+
+		 stage.initModality(Modality.APPLICATION_MODAL);
+		 stage.setOpacity(1);
+		 stage.setTitle("Login");
+		 stage.setScene(new Scene(root, 453, 357));
+		 stage.show();
+	    // Save file
+	});
+    
   }
   
   /**
@@ -79,7 +118,7 @@ public class UserController {
     AnchorPane root = (AnchorPane)loader.load();
     
     AlbumController albumController = loader.getController();
-    albumController.setAlbum(user.getAlbum("Album1"));
+    //albumController.setAlbum(user.getAlbumList("Album1"));
     albumController.start(primaryStage);
     
     primaryStage.getScene().setRoot(root);

@@ -7,13 +7,15 @@ import java.util.HashMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.User;
+import model.UsersList;
 
 
 public class AccountController {
@@ -25,7 +27,7 @@ public class AccountController {
   
   private Stage primaryStage;
   
-  private HashMap<String, User> userList;
+  //private static UsersList userList = new UsersList();
   private String previousWindow;
 
   public void start(Stage primaryStage) {   
@@ -33,7 +35,7 @@ public class AccountController {
   }
   
   public void setUserList(HashMap<String, User> userList) {   
-    this.userList = userList;    
+    LoginController.userList.setUserList(userList);    
   } 
   
   public void setPreviousWindow(String previousWindow) {   
@@ -42,10 +44,35 @@ public class AccountController {
   
   @FXML
   void createAccount(ActionEvent ae) throws IOException {
-    if (userList.get(accountField.getText()) == null) {
+    if (LoginController.userList.getUser(accountField.getText().trim()) == null) {
+    	
+    	//Since we dont have a password field im going
+    	// to use the username as key and string for hashMap.
+    	String id = (accountField.getText()).trim();
+    	String name = (accountField.getText()).trim();
+    	
+      User user = new User(id, name);
       
-      User user = new User(accountField.getText());
-      userList.put(accountField.getText(), user);
+      
+      if(name.equalsIgnoreCase("") && id.equalsIgnoreCase(""))
+      {
+    	  Alert alert2 = new Alert(AlertType.INFORMATION);
+    	  alert2.setTitle("Information Dialog");
+    	  alert2.setHeaderText(null);
+    	  alert2.setContentText("Who's going to enter the UserName ma man!");
+    	  alert2.showAndWait();
+      }
+      else if(LoginController.userList.getUserList() != null && LoginController.userList.getUserList().containsKey(id))
+      {
+    	  Alert alert2 = new Alert(AlertType.INFORMATION);
+    	  alert2.setTitle("Information Dialog");
+    	  alert2.setHeaderText(null);
+    	  alert2.setContentText("too bad!! someone alread stole this name!");
+    	  alert2.showAndWait();
+    	  accountField.clear();
+      }
+      
+      LoginController.userList.addUser(accountField.getText(), accountField.getText());
       
       if (previousWindow.equals("login")) {
         FXMLLoader loader = new FXMLLoader();
@@ -54,7 +81,7 @@ public class AccountController {
         
         UserController userController = loader.getController();
         userController.setUser(user);
-        userController.setUserList(userList);
+        userController.setUserList(LoginController.userList.getUserList());
         userController.start(primaryStage);
         
         primaryStage.getScene().setRoot(root);
@@ -66,7 +93,7 @@ public class AccountController {
         AnchorPane root = (AnchorPane)loader.load();
         
         AdminController adminController = loader.getController();
-        adminController.setUserList(userList);
+        adminController.setUserList(LoginController.userList.getUserList());
         adminController.start(primaryStage);
         
         primaryStage.getScene().setRoot(root);
@@ -90,7 +117,7 @@ public class AccountController {
       AnchorPane root = (AnchorPane)loader.load();
       
       LoginController loginController = loader.getController();
-      loginController.setUserList(userList);
+      loginController.setUserList(LoginController.userList.getUserList());
       loginController.start(primaryStage);
       
       primaryStage.getScene().setRoot(root);
@@ -102,7 +129,7 @@ public class AccountController {
       AnchorPane root = (AnchorPane)loader.load();
       
       AdminController adminController = loader.getController();
-      adminController.setUserList(userList);
+      adminController.setUserList(LoginController.userList.getUserList());
       adminController.start(primaryStage);
       
       primaryStage.getScene().setRoot(root);
