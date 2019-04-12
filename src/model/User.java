@@ -21,6 +21,10 @@ public class User {
     return albums.get(albumName);
   }
   
+  public HashMap<String, Album> getAlbumList() {
+    return albums;
+  }
+  
   public void addAlbum(String albumName) {
     albums.put(albumName, new Album(albumName));
   }
