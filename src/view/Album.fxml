@@ -31,16 +31,12 @@
             <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <ButtonBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="45.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <ButtonBar buttonMinWidth="60.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="45.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <buttons>
-                  <MenuButton mnemonicParsing="false" prefWidth="75.0" text="Edit">
-                     <items>
-                        <MenuItem mnemonicParsing="false" text="Cut" />
-                        <MenuItem mnemonicParsing="false" text="Copy" />
-                        <MenuItem mnemonicParsing="false" text="Paste" />
-                     </items>
-                  </MenuButton>
-                  <Button layoutX="705.0" layoutY="13.0" mnemonicParsing="false" text="Add" />
+                  <Button layoutX="580.0" layoutY="20.0" mnemonicParsing="false" prefWidth="60.0" text="View" />
+                  <Button layoutX="705.0" layoutY="20.0" mnemonicParsing="false" prefWidth="60.0" text="Delete" />
+                  <Button layoutX="705.0" layoutY="13.0" mnemonicParsing="false" prefWidth="60.0" text="Add" />
+                  <Button fx:id="back" layoutX="650.0" layoutY="20.0" mnemonicParsing="false" onAction="#back" prefWidth="60.0" text="&lt;" />
                </buttons>
             </ButtonBar>
             <Hyperlink fx:id="logout" onAction="#logout" text="Logout" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
@@ -52,7 +48,7 @@
                   <Insets />
                </GridPane.margin>
             </Label>
-            <TextField maxWidth="-Infinity" prefWidth="100.0" promptText="Search" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+            <TextField maxWidth="-Infinity" prefWidth="120.0" promptText="Search" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="56.0" />
                </GridPane.margin>
@@ -62,6 +58,16 @@
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
               </content>
             </ScrollPane>
+            <MenuButton mnemonicParsing="false" prefWidth="60.0" text="Edit" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Cut" />
+                  <MenuItem mnemonicParsing="false" text="Copy" />
+                  <MenuItem mnemonicParsing="false" text="Paste" />
+               </items>
+               <GridPane.margin>
+                  <Insets right="186.0" />
+               </GridPane.margin>
+            </MenuButton>
          </children>
       </GridPane>
    </children>

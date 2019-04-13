@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Optional;
 
+import app.Photos;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -13,8 +14,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -26,7 +25,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Album;
 import model.User;
@@ -35,7 +33,7 @@ import model.UsersList;
 public class UserController {
   
   @FXML private Hyperlink logout;
-  @FXML private Button tempButton;  
+  @FXML private Button renameButton;  
 
   @FXML
   private Button delete;
@@ -69,7 +67,7 @@ public class UserController {
   private Stage primaryStage;
   private User user;
   
-  private HashMap<String, User> userList;
+  private UsersList userList;
   
   private HashMap<String, Album> albumList;
   private ObservableList<Album> obsList = FXCollections.observableArrayList();  
@@ -97,6 +95,7 @@ public class UserController {
     if(selected != null) {
       delete.setDisable(false);
       view.setDisable(false);
+      renameButton.setDisable(false);
     }
     
     table.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Album>() {
@@ -106,10 +105,12 @@ public class UserController {
                             
               delete.setDisable(true);
               view.setDisable(true);
+              renameButton.setDisable(true);
               
           } else {
             delete.setDisable(false);
             view.setDisable(false);
+            renameButton.setDisable(false);
           }
         }
     });     
@@ -118,7 +119,7 @@ primaryStage.setOnCloseRequest(event -> {
 		
 		
 		try {
-			 UsersList.save(LoginController.userList.getUserList());
+			 UsersList.save(Photos.userList.getUserList());
 		 } catch (IOException er) {
 			 // TODO Auto-generated catch block
 			 er.printStackTrace();
@@ -126,7 +127,6 @@ primaryStage.setOnCloseRequest(event -> {
 		 
 	});
 
-    
   }
   
   /**
@@ -139,9 +139,7 @@ primaryStage.setOnCloseRequest(event -> {
   
   
   
-  public void setUserList(HashMap<String, User> userList) {   
-    this.userList = userList;    
-  } 
+ 
   
   @FXML
   private void goToAlbum(ActionEvent ae) throws IOException {
@@ -150,7 +148,8 @@ primaryStage.setOnCloseRequest(event -> {
     AnchorPane root = (AnchorPane)loader.load();
     
     AlbumController albumController = loader.getController();
-
+    
+    albumController.setUser(user);
     albumController.setAlbum(table.getSelectionModel().getSelectedItem());
     albumController.start(primaryStage);
     
@@ -196,6 +195,36 @@ primaryStage.setOnCloseRequest(event -> {
     }
 
   }
+  
+  @FXML
+  void rename(ActionEvent event) {
+    TextInputDialog d = new TextInputDialog();
+    d.setTitle("Rename Album");
+    d.setHeaderText("Rename album");
+    d.setContentText("Enter album name:");
+    d.initOwner(primaryStage);
+    
+    Optional<String> result = d.showAndWait();
+    if (result.isPresent()) {
+      
+      if (albumList.get(result.get()) != null) {
+        Alert alert = new Alert(AlertType.WARNING);
+        alert.setTitle("Error");
+        alert.setHeaderText("Duplicate Album");
+        alert.setContentText("An album with that name already exists.");
+        alert.showAndWait();
+      } else {
+        
+        String oldName = table.getSelectionModel().getSelectedItem().getName();
+        obsList.get(obsList.indexOf(table.getSelectionModel().getSelectedItem())).setAlbumName(result.get());;
+        albumList.get(oldName).setAlbumName(result.get());
+        albumList.put(result.get(), albumList.get(oldName));
+        albumList.remove(oldName);
+        table.refresh();
+        
+      }
+    }
+  }
 
   @FXML
   void search(ActionEvent event) {
@@ -212,7 +241,7 @@ primaryStage.setOnCloseRequest(event -> {
     if (result.isPresent() && result.get() == ButtonType.OK) { 
     	
 		try {
-			 UsersList.save(LoginController.userList.getUserList());
+			 UsersList.save(Photos.userList.getUserList());
 		 } catch (IOException er) {
 			 // TODO Auto-generated catch block
 			 er.printStackTrace();
@@ -222,7 +251,7 @@ primaryStage.setOnCloseRequest(event -> {
       AnchorPane root = (AnchorPane)loader.load();
       
       LoginController loginController = loader.getController();
-      loginController.setUserList(userList);
+      
       loginController.start(primaryStage);
       
       primaryStage.getScene().setRoot(root);

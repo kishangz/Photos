@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.Set;
 
+import app.Photos;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -32,20 +33,16 @@ public class AdminController {
   @FXML
   private Button addButton;
   
-  private HashMap<String, User> userList;
-  
   private Stage primaryStage;
   
   private ObservableList<String> obsList = FXCollections.observableArrayList();  
   @FXML private ListView<String> listView;
   
-  public void setUserList(HashMap<String, User> userList) {   
-    this.userList = userList;    
-  } 
+  
 
   public void start(Stage primaryStage) {   
     this.primaryStage = primaryStage;   
-    Set<String> set = userList.keySet();
+    Set<String> set = Photos.userList.getUserList().keySet();
     obsList.addAll(set);
     
     listView.setItems(obsList); 
@@ -72,7 +69,7 @@ public class AdminController {
 		
 		
 		try {
-			 UsersList.save(LoginController.userList.getUserList());
+			 UsersList.save(Photos.userList.getUserList());
 		 } catch (IOException er) {
 			 // TODO Auto-generated catch block
 			 er.printStackTrace();
@@ -89,7 +86,7 @@ public class AdminController {
     AnchorPane root = (AnchorPane)loader.load();
     
     AccountController accountController = loader.getController();
-    accountController.setUserList(userList);
+    
     accountController.setPreviousWindow("admin");
     accountController.start(primaryStage);
     
@@ -106,7 +103,7 @@ public class AdminController {
     Optional<ButtonType> result = alert.showAndWait();
     if (result.isPresent() && result.get() == ButtonType.OK) {  
         
-        userList.remove(listView.getSelectionModel().getSelectedItem());
+        Photos.userList.getUserList().remove(listView.getSelectionModel().getSelectedItem());
         obsList.remove(listView.getSelectionModel().getSelectedItem());
     }
   }
@@ -126,7 +123,7 @@ public class AdminController {
     if (result.isPresent() && result.get() == ButtonType.OK) {
     	
 		try {
-			 UsersList.save(LoginController.userList.getUserList());
+			 UsersList.save(Photos.userList.getUserList());
 		 } catch (IOException er) {
 			 // TODO Auto-generated catch block
 			 er.printStackTrace();
@@ -137,7 +134,7 @@ public class AdminController {
       AnchorPane root = (AnchorPane)loader.load();
       
       LoginController loginController = loader.getController();
-      loginController.setUserList(userList);
+      
       loginController.start(primaryStage);
       
       primaryStage.getScene().setRoot(root);
