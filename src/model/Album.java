@@ -68,7 +68,31 @@ public class Album implements Serializable, Comparable<Album> {
 		return this.name.compareTo(otherAlbum.getName());
 	}
 	
-	public String getLastestDate() {
+	public String getLatestDate()
+	{
+		Collection<Photo> tempPhoto = new ArrayList<Photo>(this.photos.values());
+		ArrayList<Photo> PhotoArray = new ArrayList<Photo>(tempPhoto);
+		
+		
+		if(PhotoArray.isEmpty())
+		{
+			return "";
+		}
+		
+		
+		DateComparator dc = new DateComparator();
+		Collections.sort(PhotoArray, dc);
+		
+		for(int i = 0; i < PhotoArray.size(); i++)
+		{
+			//System.out.println(PhotoArray.get(i).getDate());
+		}
+		
+		return PhotoArray.get(PhotoArray.size()-1).getDate();
+
+	}
+	
+	public String getEarliestDate() {
 		
 		Collection<Photo> tempPhoto = new ArrayList<Photo>(this.photos.values());
 		ArrayList<Photo> PhotoArray = new ArrayList<Photo>(tempPhoto);

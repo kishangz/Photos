@@ -29,6 +29,10 @@ public class LoginController {
   
   String userEntered;
   
+  protected static User currUser;
+  
+  public static int counter = 0;
+  
   //Temporarily just creating the user list here rather than passing it in from the main method after 
   // loading it from file;
   public static UsersList userList =  new UsersList();
@@ -86,7 +90,29 @@ public class LoginController {
       
       primaryStage.getScene().setRoot(root);
       primaryStage.show();
-    } else {
+    } 
+    else if(userEntered.equalsIgnoreCase("stock")){
+    	
+    	if (this.userList.getUser("stock") == null)
+    	{
+    		this.userList.addUser("stock", "stock");
+    	}
+    	
+    	this.currUser = this.userList.getUser("stock");
+    	
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("/view/User.fxml"));
+		AnchorPane root = (AnchorPane)loader.load();
+		
+		UserController userController = loader.getController();
+		userController.setUserList(userList.getUserList());
+        userController.setUser(this.currUser);
+        userController.start(primaryStage);
+    	
+        primaryStage.getScene().setRoot(root);
+        primaryStage.show(); 
+    }
+    else {
       
       User user = userList.getUser(userEntered);
       
