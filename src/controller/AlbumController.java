@@ -10,14 +10,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Map.Entry;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import app.Photos;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
@@ -30,6 +31,8 @@ import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 import model.Album;
 import model.Photo;
+import model.User;
+import model.UsersList;
 
 public class AlbumController {
   
@@ -50,14 +53,19 @@ public class AlbumController {
   
   private ArrayList<Photo> PhotoList = new ArrayList<Photo>();
   
+  @FXML private Button back; 
+  
   private Stage primaryStage;
   private Album album;
+  User user;
   
   public void setAlbum(Album album) {   
     this.album = album;    
-  }
+  }  
   
-  
+  public void setUser(User user) {   
+    this.user = user;         
+  } 
 
   public void start(Stage primaryStage) {   
     this.primaryStage = primaryStage; 
@@ -99,6 +107,18 @@ public class AlbumController {
 	}	
     	
     displayImages(album.getName());    	    
+
+    primaryStage.setOnCloseRequest(event -> {
+     
+      
+      try {
+           UsersList.save(Photos.userList.getUserList());
+       } catch (IOException er) {
+           // TODO Auto-generated catch block
+           er.printStackTrace();
+       }
+       
+    });
   }
   
 public void startA(Album thisAlbum) {
@@ -184,7 +204,28 @@ public void startA(Album thisAlbum) {
 	
 }
 
-
+  @FXML
+  private void back(ActionEvent ae) throws IOException {
+    try {
+      UsersList.save(Photos.userList.getUserList());
+   } catch (IOException er) {
+      // TODO Auto-generated catch block
+      er.printStackTrace();
+   }
+    
+    FXMLLoader loader = new FXMLLoader();
+    loader.setLocation(getClass().getResource("/view/User.fxml"));
+    AnchorPane root = (AnchorPane)loader.load();
+    
+    UserController userController = loader.getController();
+    
+    userController.setUser(user);
+    userController.start(primaryStage);
+    
+    primaryStage.getScene().setRoot(root);
+    primaryStage.show();    
+    
+  }
 
 @FXML
   private void logout(ActionEvent ae) throws IOException {
@@ -194,6 +235,15 @@ public void startA(Album thisAlbum) {
             
     Optional<ButtonType> result = alert.showAndWait();
     if (result.isPresent() && result.get() == ButtonType.OK) {  
+      
+     try {
+        UsersList.save(Photos.userList.getUserList());
+     } catch (IOException er) {
+        // TODO Auto-generated catch block
+        er.printStackTrace();
+     }
+      
+      
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(getClass().getResource("/view/Login.fxml"));
       AnchorPane root = (AnchorPane)loader.load();

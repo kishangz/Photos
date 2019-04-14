@@ -8,8 +8,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.UsersList;
 
 public class Photos extends Application {
+  
+  public static UsersList userList =  new UsersList();   
   
   @Override
   public void start(Stage primaryStage)
@@ -17,6 +20,13 @@ public class Photos extends Application {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(getClass().getResource("/view/Login.fxml"));
       AnchorPane root = (AnchorPane)loader.load();
+      
+      try {
+        userList.setUserList(UsersList.read());
+      } catch (ClassNotFoundException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }  
       
       LoginController loginController = loader.getController();
       loginController.start(primaryStage);

@@ -30,8 +30,9 @@
             <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <ButtonBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="45.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <ButtonBar buttonMinWidth="60.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="45.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
               <buttons>
+                  <Button fx:id="renameButton" disable="true" layoutX="580.0" layoutY="20.0" mnemonicParsing="false" onAction="#rename" text="Rename" />
                   <Button fx:id="view" disable="true" mnemonicParsing="false" onAction="#goToAlbum" text="View" />
                 <Button fx:id="delete" disable="true" mnemonicParsing="false" onAction="#delete" text="Delete" />
                   <Button fx:id="add" layoutX="705.0" layoutY="13.0" mnemonicParsing="false" onAction="#add" text="Add" />
@@ -57,7 +58,7 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <TextField fx:id="search" maxWidth="-Infinity" onAction="#search" prefWidth="100.0" promptText="Search" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+            <TextField fx:id="search" maxWidth="-Infinity" onAction="#search" prefWidth="120.0" promptText="Search" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="56.0" />
                </GridPane.margin>

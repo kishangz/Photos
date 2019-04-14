@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.Stack;
 
+import app.Photos;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -44,7 +45,7 @@ import model.UsersList;
 public class UserController {
   
   @FXML private Hyperlink logout;
-  @FXML private Button tempButton;  
+  @FXML private Button renameButton;  
 
   @FXML
   private Button delete;
@@ -92,6 +93,8 @@ public class UserController {
   private ArrayList<Photo> PhotoList = new ArrayList<Photo>();
   private HashMap<String, User> userList;
   
+  //private UsersList usersList;
+  
   private HashMap<String, Album> albumList;
   private ObservableList<Album> obsList = FXCollections.observableArrayList();
  
@@ -100,7 +103,11 @@ public class UserController {
     this.user = user;  
     albumList = user.getAlbumList();
    
-  } 
+  }
+  
+  public void setUserList(HashMap<String, User> userList) {   
+	    this.userList = userList;    
+	  } 
 
   public void start(Stage primaryStage) {   
     this.primaryStage = primaryStage; 
@@ -121,6 +128,7 @@ public class UserController {
     if(selected != null) {
       delete.setDisable(false);
       view.setDisable(false);
+      renameButton.setDisable(false);
     }
     
     table.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Album>() {
@@ -130,10 +138,12 @@ public class UserController {
                             
               delete.setDisable(true);
               view.setDisable(true);
+              renameButton.setDisable(true);
               
           } else {
             delete.setDisable(false);
             view.setDisable(false);
+            renameButton.setDisable(false);
           }
         }
     });     
@@ -142,7 +152,7 @@ public class UserController {
 		
 		
 		try {
-			 UsersList.save(LoginController.userList.getUserList());
+			 UsersList.save(Photos.userList.getUserList());
 		 } catch (IOException er) {
 			 // TODO Auto-generated catch block
 			 er.printStackTrace();
@@ -181,7 +191,7 @@ public class UserController {
   public void startU() {
 	  
   }
-  
+    
   /*
   
   private void displayImages(String selectedItem) {
@@ -201,9 +211,7 @@ public class UserController {
   */
   
   
-  public void setUserList(HashMap<String, User> userList) {   
-    this.userList = userList;    
-  } 
+ 
   
   @FXML
   private void goToAlbum(ActionEvent ae) throws IOException {
@@ -212,7 +220,8 @@ public class UserController {
     AnchorPane root = (AnchorPane)loader.load();
     
     AlbumController albumController = loader.getController();
-
+    
+    albumController.setUser(user);
     albumController.setAlbum(table.getSelectionModel().getSelectedItem());
     albumController.start(primaryStage);
     
@@ -258,6 +267,36 @@ public class UserController {
     }
 
   }
+  
+  @FXML
+  void rename(ActionEvent event) {
+    TextInputDialog d = new TextInputDialog();
+    d.setTitle("Rename Album");
+    d.setHeaderText("Rename album");
+    d.setContentText("Enter album name:");
+    d.initOwner(primaryStage);
+    
+    Optional<String> result = d.showAndWait();
+    if (result.isPresent()) {
+      
+      if (albumList.get(result.get()) != null) {
+        Alert alert = new Alert(AlertType.WARNING);
+        alert.setTitle("Error");
+        alert.setHeaderText("Duplicate Album");
+        alert.setContentText("An album with that name already exists.");
+        alert.showAndWait();
+      } else {
+        
+        String oldName = table.getSelectionModel().getSelectedItem().getName();
+        obsList.get(obsList.indexOf(table.getSelectionModel().getSelectedItem())).setAlbumName(result.get());;
+        albumList.get(oldName).setAlbumName(result.get());
+        albumList.put(result.get(), albumList.get(oldName));
+        albumList.remove(oldName);
+        table.refresh();
+        
+      }
+    }
+  }
 
   @FXML
   void search(ActionEvent event) {
@@ -274,7 +313,7 @@ public class UserController {
     if (result.isPresent() && result.get() == ButtonType.OK) { 
     	
 		try {
-			 UsersList.save(LoginController.userList.getUserList());
+			 UsersList.save(Photos.userList.getUserList());
 		 } catch (IOException er) {
 			 // TODO Auto-generated catch block
 			 er.printStackTrace();
@@ -284,7 +323,7 @@ public class UserController {
       AnchorPane root = (AnchorPane)loader.load();
       
       LoginController loginController = loader.getController();
-      loginController.setUserList(userList);
+      
       loginController.start(primaryStage);
       
       primaryStage.getScene().setRoot(root);
