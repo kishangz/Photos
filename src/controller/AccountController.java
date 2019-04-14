@@ -32,7 +32,18 @@ public class AccountController {
   private String previousWindow;
 
   public void start(Stage primaryStage) {   
-    this.primaryStage = primaryStage;    
+    this.primaryStage = primaryStage;  
+    
+    primaryStage.setOnCloseRequest(event -> {
+      
+      
+      try {
+           UsersList.save(LoginController.userList.getUserList());
+       } catch (IOException er) {
+           // TODO Auto-generated catch block
+           er.printStackTrace();
+       }
+    });
   }
   
   
@@ -43,7 +54,7 @@ public class AccountController {
   
   @FXML
   void createAccount(ActionEvent ae) throws IOException {
-    if (Photos.userList.getUser(accountField.getText().trim()) == null) {
+    if (LoginController.userList.getUser(accountField.getText().trim()) == null) {
     	
     	//Since we dont have a password field im going
     	// to use the username as key and string for hashMap.
@@ -64,34 +75,23 @@ public class AccountController {
       }
       
       
-      Photos.userList.addUser(accountField.getText(), accountField.getText());
+      LoginController.userList.addUser(accountField.getText(), accountField.getText());
       
-      if (previousWindow.equals("login")) {
-        try {
-          UsersList.save(Photos.userList.getUserList());
-      } catch (IOException er) {
-          // TODO Auto-generated catch block
-          er.printStackTrace();
-      }
-        
+      if (previousWindow.equals("login")) {       
+        LoginController.currUser = LoginController.userList.getUser(accountField.getText());
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/view/User.fxml"));
         AnchorPane root = (AnchorPane)loader.load();
         
         UserController userController = loader.getController();
-        userController.setUser(Photos.userList.getUser(accountField.getText()));
+        
         
         userController.start(primaryStage);
         
         primaryStage.getScene().setRoot(root);
         primaryStage.show();  
       } else {
-        try {
-          UsersList.save(Photos.userList.getUserList());
-      } catch (IOException er) {
-          // TODO Auto-generated catch block
-          er.printStackTrace();
-      }
+        
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/view/Admin.fxml"));
         AnchorPane root = (AnchorPane)loader.load();
@@ -116,12 +116,7 @@ public class AccountController {
   @FXML
   void cancel(ActionEvent event) throws IOException {
     if (previousWindow.equals("login")) {
-      try {
-        UsersList.save(Photos.userList.getUserList());
-    } catch (IOException er) {
-        // TODO Auto-generated catch block
-        er.printStackTrace();
-    }
+     
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(getClass().getResource("/view/Login.fxml"));
       AnchorPane root = (AnchorPane)loader.load();
@@ -133,12 +128,7 @@ public class AccountController {
       primaryStage.getScene().setRoot(root);
       primaryStage.show();
     } else {
-      try {
-        UsersList.save(Photos.userList.getUserList());
-    } catch (IOException er) {
-        // TODO Auto-generated catch block
-        er.printStackTrace();
-    }
+      
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(getClass().getResource("/view/Admin.fxml"));
       AnchorPane root = (AnchorPane)loader.load();

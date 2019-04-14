@@ -42,7 +42,7 @@ public class AdminController {
 
   public void start(Stage primaryStage) {   
     this.primaryStage = primaryStage;   
-    Set<String> set = Photos.userList.getUserList().keySet();
+    Set<String> set = LoginController.userList.getUserList().keySet();
     obsList.addAll(set);
     
     listView.setItems(obsList); 
@@ -69,7 +69,7 @@ public class AdminController {
 		
 		
 		try {
-			 UsersList.save(Photos.userList.getUserList());
+			 UsersList.save(LoginController.userList.getUserList());
 		 } catch (IOException er) {
 			 // TODO Auto-generated catch block
 			 er.printStackTrace();
@@ -103,7 +103,7 @@ public class AdminController {
     Optional<ButtonType> result = alert.showAndWait();
     if (result.isPresent() && result.get() == ButtonType.OK) {  
         
-        Photos.userList.getUserList().remove(listView.getSelectionModel().getSelectedItem());
+        LoginController.userList.getUserList().remove(listView.getSelectionModel().getSelectedItem());
         obsList.remove(listView.getSelectionModel().getSelectedItem());
     }
   }
@@ -123,7 +123,7 @@ public class AdminController {
     if (result.isPresent() && result.get() == ButtonType.OK) {
     	
 		try {
-			 UsersList.save(Photos.userList.getUserList());
+			 UsersList.save(LoginController.userList.getUserList());
 		 } catch (IOException er) {
 			 // TODO Auto-generated catch block
 			 er.printStackTrace();

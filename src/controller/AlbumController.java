@@ -112,7 +112,7 @@ public class AlbumController {
      
       
       try {
-           UsersList.save(Photos.userList.getUserList());
+           UsersList.save(LoginController.userList.getUserList());
        } catch (IOException er) {
            // TODO Auto-generated catch block
            er.printStackTrace();
@@ -207,7 +207,7 @@ public void startA(Album thisAlbum) {
   @FXML
   private void back(ActionEvent ae) throws IOException {
     try {
-      UsersList.save(Photos.userList.getUserList());
+      UsersList.save(LoginController.userList.getUserList());
    } catch (IOException er) {
       // TODO Auto-generated catch block
       er.printStackTrace();
@@ -219,7 +219,7 @@ public void startA(Album thisAlbum) {
     
     UserController userController = loader.getController();
     
-    userController.setUser(user);
+    
     userController.start(primaryStage);
     
     primaryStage.getScene().setRoot(root);
@@ -237,7 +237,7 @@ public void startA(Album thisAlbum) {
     if (result.isPresent() && result.get() == ButtonType.OK) {  
       
      try {
-        UsersList.save(Photos.userList.getUserList());
+        UsersList.save(LoginController.userList.getUserList());
      } catch (IOException er) {
         // TODO Auto-generated catch block
         er.printStackTrace();

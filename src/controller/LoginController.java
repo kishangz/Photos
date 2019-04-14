@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
-import app.Photos;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,26 +31,23 @@ public class LoginController {
   
   public static int counter = 0;
   
+  public static UsersList userList;
+  
   //Temporarily just creating the user list here rather than passing it in from the main method after 
   // loading it from file;
   
-  public static UsersList userList =  new UsersList();
+  
 
   public void start(Stage primaryStage) throws FileNotFoundException, IOException {   
     this.primaryStage = primaryStage;
     
-    try {
-      Photos.userList.setUserList(UsersList.read());
-    } catch (ClassNotFoundException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }  
+    
     
     primaryStage.setOnCloseRequest(event -> {
 		
 		
 		try {
-			 UsersList.save(Photos.userList.getUserList());
+			 UsersList.save(userList.getUserList());
 		 } catch (IOException er) {
 			 // TODO Auto-generated catch block
 			 er.printStackTrace();
@@ -61,9 +57,16 @@ public class LoginController {
     
   }
   
-  public void setUserList(HashMap<String, User> userList) {   
-	    this.userList.setUserList(userList);    
-	  } 
+  public void setUserList() throws FileNotFoundException, IOException { 
+    userList =  new UsersList();
+    
+    try {
+      userList.read();
+     } catch (ClassNotFoundException e) {
+       // TODO Auto-generated catch block
+       e.printStackTrace();
+     }  
+  } 
   
   
   @FXML
@@ -74,12 +77,6 @@ public class LoginController {
     
     if(userEntered.equalsIgnoreCase("admin")) {
       
-      try {
-        UsersList.save(Photos.userList.getUserList());
-    } catch (IOException er) {
-        // TODO Auto-generated catch block
-        er.printStackTrace();
-    }
     	
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(getClass().getResource("/view/Admin.fxml"));
@@ -94,20 +91,20 @@ public class LoginController {
     } 
     else if(userEntered.equalsIgnoreCase("stock")){
     	
-    	if (this.userList.getUser("stock") == null)
+    	if (userList.getUser("stock") == null)
     	{
-    		this.userList.addUser("stock", "stock");
+    		userList.addUser("stock", "stock");
     	}
     	
-    	this.currUser = this.userList.getUser("stock");
+    	currUser = userList.getUser("stock");
     	
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("/view/User.fxml"));
 		AnchorPane root = (AnchorPane)loader.load();
 		
 		UserController userController = loader.getController();
-		userController.setUserList(userList.getUserList());
-        userController.setUser(this.currUser);
+		
+        
         userController.start(primaryStage);
     	
         primaryStage.getScene().setRoot(root);
@@ -115,16 +112,10 @@ public class LoginController {
     }
     else {
       
-      User user = Photos.userList.getUser(userEntered);
+      currUser = userList.getUser(userEntered);
       
-      if (user != null) {
+      if (currUser != null) {
         
-        try {
-          UsersList.save(Photos.userList.getUserList());
-      } catch (IOException er) {
-          // TODO Auto-generated catch block
-          er.printStackTrace();
-      }
         
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/view/User.fxml"));
@@ -132,7 +123,7 @@ public class LoginController {
         
         UserController userController = loader.getController();
         
-        userController.setUser(user);
+        
         userController.start(primaryStage);
         
         primaryStage.getScene().setRoot(root);
@@ -148,12 +139,7 @@ public class LoginController {
   @FXML
   private void signUp(ActionEvent ae) throws IOException {
     
-    try {
-      UsersList.save(Photos.userList.getUserList());
-  } catch (IOException er) {
-      // TODO Auto-generated catch block
-      er.printStackTrace();
-  }
+    
     
     FXMLLoader loader = new FXMLLoader();
     loader.setLocation(getClass().getResource("/view/Account.fxml"));

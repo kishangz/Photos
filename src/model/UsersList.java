@@ -62,23 +62,23 @@ public class UsersList implements Serializable{
 		return u;
 	}
 	
-	public static HashMap<String, User> read() throws FileNotFoundException, IOException, ClassNotFoundException{
+	public void read() throws FileNotFoundException, IOException, ClassNotFoundException{
 		
 		File file = new File(storeDir + File.separator + storeFile);
-		HashMap<String,User> users = null;
+		
 		try {
 			if(file.length() == 0) {
 				file.createNewFile();
 			}
 			else {
 				ObjectInputStream tempIn = new ObjectInputStream(new FileInputStream(file));
-				users = (HashMap<String, User>) tempIn.readObject();
+				userList = (HashMap<String, User>) tempIn.readObject();
 				
 			}
 		}catch(IOException e){
 			
 		}
-		return users;
+		
 	}
 	
 	public static void save(HashMap<String, User> userList) throws IOException

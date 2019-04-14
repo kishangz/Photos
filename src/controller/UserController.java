@@ -95,15 +95,11 @@ public class UserController {
   
   //private UsersList usersList;
   
-  private HashMap<String, Album> albumList;
+  private HashMap<String, Album> albumList; 
   private ObservableList<Album> obsList = FXCollections.observableArrayList();
  
   
-  public void setUser(User user) {   
-    this.user = user;  
-    albumList = user.getAlbumList();
-   
-  }
+  
   
   public void setUserList(HashMap<String, User> userList) {   
 	    this.userList = userList;    
@@ -112,7 +108,8 @@ public class UserController {
   public void start(Stage primaryStage) {   
     this.primaryStage = primaryStage; 
     
-    headerLabel.setText(user.getName());
+    headerLabel.setText(LoginController.currUser.getName());
+    albumList = LoginController.currUser.getAlbumList();
     
     Collection<Album> set = albumList.values();
     obsList.addAll(set);
@@ -152,7 +149,7 @@ public class UserController {
 		
 		
 		try {
-			 UsersList.save(Photos.userList.getUserList());
+			 UsersList.save(LoginController.userList.getUserList());
 		 } catch (IOException er) {
 			 // TODO Auto-generated catch block
 			 er.printStackTrace();
@@ -313,7 +310,7 @@ public class UserController {
     if (result.isPresent() && result.get() == ButtonType.OK) { 
     	
 		try {
-			 UsersList.save(Photos.userList.getUserList());
+			 UsersList.save(LoginController.userList.getUserList());
 		 } catch (IOException er) {
 			 // TODO Auto-generated catch block
 			 er.printStackTrace();
