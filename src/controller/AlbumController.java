@@ -11,6 +11,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Map.Entry;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import app.Photos;
@@ -24,11 +27,14 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -54,10 +60,18 @@ public class AlbumController {
   @FXML
   private Button add;
   
-  File[] stockPhoto;
+  @FXML
+  private MenuItem cut;
+
+  @FXML
+  private MenuItem copy;
+
+  @FXML
+  private MenuItem paste;
   
-  ListView<String> listView;   
-  ObservableList<String> obsList; 
+  private Photo clipboard = null;
+  
+  File[] stockPhoto;
   
   ArrayList<File> fileStock = new ArrayList<File>(); 
   
@@ -65,15 +79,24 @@ public class AlbumController {
   
   private ArrayList<Photo> PhotoList = new ArrayList<Photo>();
   
+  private ArrayList<HBox> photoHBoxes = new ArrayList<HBox>();
+  
   @FXML private Button back; 
   
   private Stage primaryStage;
   private Album album;
   User user;
   
+  private ObservableList<HBox> obsList = FXCollections.observableArrayList();  
+  @FXML private ListView<HBox> listView;
+  
   public void setAlbum(Album album) {   
     this.album = album;    
   }  
+  
+  public void setClipboard(Photo clipboard) {   
+    this.clipboard = clipboard;    
+  } 
   
   public void setUser(User user) {   
     this.user = user;         
@@ -84,30 +107,37 @@ public class AlbumController {
     
     headerLabel.setText(album.getName());
     
-    if(LoginController.currUser.getUserKey().equalsIgnoreCase("stock"))
-	{
-        Iterator<Photo> photos = LoginController.currUser.getAlbumList().get("stock").getListOfPhotos().values().iterator();
+    displayImages(album.getName());  
+    
+    listView.getSelectionModel().selectFirst();
+    
+    HBox selected = listView.getSelectionModel().getSelectedItem();         
+    if(selected != null) {
+      delete.setDisable(false);
+      view.setDisable(false);
       
-    	while(photos.hasNext())
-    	{
-    		
-    		Image image = new Image(photos.next().getFile().toURI().toString());
-    		
-    		ImageView imageView= new ImageView();
-    		imageView.setImage(image);
-    		imageView.setFitHeight(110);
-            imageView.setFitWidth(110);
+    }
+    
+    listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<HBox>() {
+      @Override
+      public void changed(ObservableValue<? extends HBox> obs, HBox oldValue, HBox newValue) {
+          if(newValue == null) {
+                            
+              delete.setDisable(true);
+              view.setDisable(true);
+              
+              
+          } else {
+            delete.setDisable(false);
+            view.setDisable(false);
             
-    		pics.getChildren().addAll(imageView);
-
-    	}
-    	
-    	
+          }
+        }
+    });  
+    
     
     	
-	}	
-    	
-    displayImages(album.getName());    	    
+      	    
 
     primaryStage.setOnCloseRequest(event -> {
      
@@ -134,16 +164,38 @@ public void startA(Album thisAlbum) {
     FileChooser f = new FileChooser();
     File file = f.showOpenDialog(primaryStage);
     
-    Photo photo = new Photo(file.toURI().toString(), "", file);
-    album.addPhoto(photo);
-    Image image = new Image(photo.getFile().toURI().toString());
+    if (file != null) {
+      
+      String caption = "";
+      TextInputDialog d = new TextInputDialog();
+      d.setTitle("Add Caption");
+      d.setHeaderText("Add caption");
+      d.setContentText("Enter photo caption:");
+      d.initOwner(primaryStage);
+      
+      Optional<String> result = d.showAndWait();
+      if (result.isPresent()) {
+        caption = result.get();
+      }      
+      
+      Photo photo = new Photo(file.toURI().toString(), caption, file);
+      album.addPhoto(photo);
+      Image image = new Image(photo.getFile().toURI().toString());
+      
+      ImageView imageView= new ImageView();
+      imageView.setImage(image);
+      imageView.setFitHeight(110);
+      imageView.setFitWidth(110);
+      HBox hBox = new HBox(10.0);
+      hBox.setUserData(photo.getPhotoName());
+      hBox.getChildren().add(imageView);
+      Label label = new Label(photo.getCaption());
+      hBox.getChildren().add(label);
+      
+      obsList.add(hBox);
+      listView.scrollTo(hBox);
+    }
     
-    ImageView imageView= new ImageView();
-    imageView.setImage(image);
-    imageView.setFitHeight(110);
-    imageView.setFitWidth(110);
-    
-    pics.getChildren().addAll(imageView);
         
 
   }
@@ -151,6 +203,18 @@ public void startA(Album thisAlbum) {
   @FXML
   void delete(ActionEvent event) {
 
+    Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure that you want to delete this photo?");
+    alert.initOwner(primaryStage);
+            
+    Optional<ButtonType> result = alert.showAndWait();
+    if (result.isPresent() && result.get() == ButtonType.OK) {  
+      
+            
+        Photo r =  album.getListOfPhotos().get((String) listView.getSelectionModel().getSelectedItem().getUserData());     
+        album.removePhoto(r.getPhotoName());
+        obsList.remove(listView.getSelectionModel().getSelectedItem());
+        
+    }
   }
   
   @FXML
@@ -161,68 +225,81 @@ public void startA(Album thisAlbum) {
   
   private void displayImages(String album)
 	{
-		
-		if(LoginController.currUser.getAlbumList().get(album).getListOfPhotos().isEmpty())
-		{
-			pics.getChildren().clear();
-			PhotoList.clear();
-			while(!imageStack.isEmpty())
-			{
-				imageStack.pop();
-			}
-		}
-		else
-		{
-			
-			pics.getChildren().clear();
-			PhotoList.clear();
-			while(!imageStack.isEmpty())
-			{
-				imageStack.pop();
-			}
-			
-			HashMap<String, Photo> photos = LoginController.currUser.getAlbumList().get(album).getListOfPhotos();
+    
+    Iterator<Photo> photos = LoginController.currUser.getAlbumList().get(album).getListOfPhotos().values().iterator();
+    
+    while(photos.hasNext())
+    {
+      Photo photo = photos.next();
+        
+        Image image = new Image(photo.getFile().toURI().toString());
+        ImageView imageView= new ImageView();
+        imageView.setImage(image);
+        imageView.setFitHeight(110);
+        imageView.setFitWidth(110);
+        HBox hBox = new HBox(10.0);
+        hBox.setUserData(photo.getPhotoName());
+        hBox.getChildren().add(imageView);
+        Label label = new Label(photo.getCaption());
+        hBox.getChildren().add(label);
+        photoHBoxes.add(hBox);
 
-			Set<Map.Entry<String, Photo>> photoSet = photos.entrySet();
-
-			Iterator<Entry<String, Photo>> it = photoSet.iterator();
-			while (it.hasNext()) 
-			{
-				Entry entry = it.next();
-				String key = (String) entry.getKey();
-				Photo keyPhoto = photos.get(key);
-				File photoFile = keyPhoto.getFile();
-				Image image = new Image(photoFile.toURI().toString());
-				ImageView imageView= new ImageView();
-				imageView.setImage(image);
-				imageView.setFitHeight(110);
-				imageView.setFitWidth(110);
-				pics.getChildren().addAll(imageView);
-				PhotoList.add(keyPhoto);
-			}
-		}
-		if(!pics.getChildren().isEmpty())
-		{
-			imageSelect((ImageView) pics.getChildren().get(0));
-		}
-		ObservableList<Node> childNode = pics.getChildren();
+    }
+    
+    obsList.addAll(photoHBoxes);
+    listView.setItems(obsList);
 		
-		for(int i = 0; i < childNode.size(); i++)
-		{
-			Node temp = childNode.get(i);
-			temp.setOnMouseClicked(Event -> {
-				
-				if(!imageStack.isEmpty())
-				{
-					imageStack.pop();
-				}
-				
-				imageSelect((ImageView) temp);
-				
-			});
-		}
+		
 		
 	}
+  
+  @FXML
+  void copy(ActionEvent event) {
+    HBox selected = listView.getSelectionModel().getSelectedItem();
+    if (selected != null) {
+      clipboard = album.getListOfPhotos().get((String) listView.getSelectionModel().getSelectedItem().getUserData());
+    }
+    
+  }
+
+  @FXML
+  void cut(ActionEvent event) {
+    HBox selected = listView.getSelectionModel().getSelectedItem();
+    if (selected != null) {
+      clipboard = album.getListOfPhotos().get(listView.getSelectionModel().getSelectedItem().getUserData());
+      album.removePhoto((String) listView.getSelectionModel().getSelectedItem().getUserData());
+      obsList.remove(listView.getSelectionModel().getSelectedItem());
+      listView.refresh();
+    }
+    
+  }
+  
+  
+  @FXML
+  void paste(ActionEvent event) {
+    if (clipboard != null) {
+      album.addPhoto(clipboard);
+      
+      Image image = new Image(clipboard.getFile().toURI().toString());
+      
+      ImageView imageView= new ImageView();
+      imageView.setImage(image);
+      imageView.setFitHeight(110);
+      imageView.setFitWidth(110);
+      HBox hBox = new HBox(10.0);
+      hBox.setUserData(clipboard.getPhotoName());
+      hBox.getChildren().add(imageView);
+      Label label = new Label(clipboard.getCaption());
+      hBox.getChildren().add(label);
+      
+      obsList.add(hBox);
+      listView.refresh();
+      listView.scrollTo(hBox);
+      
+    }
+    
+
+  }
   
 
   private void imageSelect(ImageView imageView) {
@@ -248,7 +325,7 @@ public void startA(Album thisAlbum) {
     AnchorPane root = (AnchorPane)loader.load();
     
     UserController userController = loader.getController();
-    
+    userController.setClipboard(clipboard);
     
     userController.start(primaryStage);
     
@@ -256,6 +333,26 @@ public void startA(Album thisAlbum) {
     primaryStage.show();    
     
   }
+  
+  @FXML
+  void search(ActionEvent event) throws IOException {
+    
+    FXMLLoader loader = new FXMLLoader();
+    loader.setLocation(getClass().getResource("/view/Search.fxml"));
+    AnchorPane root = (AnchorPane)loader.load();
+    
+    SearchController searchController = loader.getController();
+    
+    searchController.setAlbum(album);
+    searchController.setPreviousWindow("album");
+    searchController.setClipboard(clipboard);
+    searchController.start(primaryStage);
+    
+    primaryStage.getScene().setRoot(root);
+    primaryStage.show();  
+
+  }
+
 
 @FXML
   private void logout(ActionEvent ae) throws IOException {

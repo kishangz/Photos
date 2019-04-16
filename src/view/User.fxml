@@ -58,7 +58,7 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <TextField fx:id="search" maxWidth="-Infinity" onAction="#search" prefWidth="120.0" promptText="Search" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+            <TextField fx:id="search" maxWidth="-Infinity" onAction="#search" prefWidth="120.0" promptText="Search by Tags" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="56.0" />
                </GridPane.margin>

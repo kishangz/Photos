@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.Photo;
 import model.User;
 import model.UsersList;
 
@@ -30,6 +31,8 @@ public class LoginController {
   protected static User currUser;
   
   public static int counter = 0;
+  
+  
   
   public static UsersList userList;
   

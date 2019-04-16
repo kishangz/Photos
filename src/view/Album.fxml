@@ -5,15 +5,14 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AlbumController">
@@ -34,8 +33,8 @@
          <children>
             <ButtonBar buttonMinWidth="60.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="45.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <buttons>
-                  <Button fx:id="view" layoutX="580.0" layoutY="20.0" mnemonicParsing="false" onAction="#view" prefWidth="60.0" text="View" />
-                  <Button fx:id="delete" layoutX="705.0" layoutY="20.0" mnemonicParsing="false" onAction="#delete" prefWidth="60.0" text="Delete" />
+                  <Button fx:id="view" disable="true" layoutX="580.0" layoutY="20.0" mnemonicParsing="false" onAction="#view" prefWidth="60.0" text="View" />
+                  <Button fx:id="delete" disable="true" layoutX="705.0" layoutY="20.0" mnemonicParsing="false" onAction="#delete" prefWidth="60.0" text="Delete" />
                   <Button fx:id="add" layoutX="705.0" layoutY="13.0" mnemonicParsing="false" onAction="#add" prefWidth="60.0" text="Add" />
                   <Button fx:id="back" layoutX="650.0" layoutY="20.0" mnemonicParsing="false" onAction="#back" prefWidth="60.0" text="&lt;" />
                </buttons>
@@ -49,26 +48,22 @@
                   <Insets />
                </GridPane.margin>
             </Label>
-            <TextField maxWidth="-Infinity" prefWidth="120.0" promptText="Search" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+            <TextField fx:id="search" maxWidth="-Infinity" onAction="#search" prefWidth="120.0" promptText="Search by Tags" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="56.0" />
                </GridPane.margin>
             </TextField>
             <MenuButton mnemonicParsing="false" prefWidth="60.0" text="Edit" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <items>
-                  <MenuItem mnemonicParsing="false" text="Cut" />
-                  <MenuItem mnemonicParsing="false" text="Copy" />
-                  <MenuItem mnemonicParsing="false" text="Paste" />
+                  <MenuItem fx:id="cut" mnemonicParsing="false" onAction="#cut" text="Cut" />
+                  <MenuItem fx:id="copy" mnemonicParsing="false" onAction="#copy" text="Copy" />
+                  <MenuItem fx:id="paste" mnemonicParsing="false" onAction="#paste" text="Paste" />
                </items>
                <GridPane.margin>
                   <Insets right="186.0" />
                </GridPane.margin>
             </MenuButton>
-            <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-               <content>
-                  <TilePane fx:id="pics" hgap="30.0" prefColumns="4" prefRows="1" vgap="30.0" />
-               </content>
-            </ScrollPane>
+            <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
    </children>
