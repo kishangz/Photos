@@ -171,12 +171,24 @@ public class UserController {
 			fileStock.add(f);
 		}
 
-		if (LoginController.currUser.getAlbumList().get("stock photos") == null)
+		if (LoginController.currUser.getAlbumList().get("stock") == null)
 		{
-			String albumName = "stock photos";
-			Album stock = new Album(albumName);
-			LoginController.currUser.getAlbumList().put(albumName, stock);
-			obsList.add(stock);
+		  String albumName = "stock";
+          Album stock = new Album(albumName);
+          LoginController.currUser.getAlbumList().put(albumName, stock);
+          
+		  
+		  for(int i = 0; i < fileStock.size(); i++)
+	        {
+	            Photo tempPhoto = new Photo(fileStock.get(i).toURI().toString(), "", fileStock.get(i));
+	            
+	            LoginController.currUser.getAlbumList().get("stock").addPhoto(tempPhoto);
+
+	        }
+		    obsList.add(stock);
+	        
+	        LoginController.counter++;
+			
 		}
 	}
   }

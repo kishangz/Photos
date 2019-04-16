@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AlbumController">
@@ -33,16 +34,16 @@
          <children>
             <ButtonBar buttonMinWidth="60.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="45.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <buttons>
-                  <Button layoutX="580.0" layoutY="20.0" mnemonicParsing="false" prefWidth="60.0" text="View" />
-                  <Button layoutX="705.0" layoutY="20.0" mnemonicParsing="false" prefWidth="60.0" text="Delete" />
-                  <Button layoutX="705.0" layoutY="13.0" mnemonicParsing="false" prefWidth="60.0" text="Add" />
+                  <Button fx:id="view" layoutX="580.0" layoutY="20.0" mnemonicParsing="false" onAction="#view" prefWidth="60.0" text="View" />
+                  <Button fx:id="delete" layoutX="705.0" layoutY="20.0" mnemonicParsing="false" onAction="#delete" prefWidth="60.0" text="Delete" />
+                  <Button fx:id="add" layoutX="705.0" layoutY="13.0" mnemonicParsing="false" onAction="#add" prefWidth="60.0" text="Add" />
                   <Button fx:id="back" layoutX="650.0" layoutY="20.0" mnemonicParsing="false" onAction="#back" prefWidth="60.0" text="&lt;" />
                </buttons>
             </ButtonBar>
             <Hyperlink fx:id="logout" onAction="#logout" text="Logout" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
             <Label fx:id="headerLabel" alignment="CENTER" prefWidth="167.0" text="Album" textFill="#2f2183" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                <font>
-                  <Font name="Arial" size="36.0" />
+                  <Font name="Arial" size="18.0" />
                </font>
                <GridPane.margin>
                   <Insets />
@@ -53,11 +54,6 @@
                   <Insets right="56.0" />
                </GridPane.margin>
             </TextField>
-            <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-              <content>
-                <AnchorPane fx:id= "pics" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-              </content>
-            </ScrollPane>
             <MenuButton mnemonicParsing="false" prefWidth="60.0" text="Edit" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <items>
                   <MenuItem mnemonicParsing="false" text="Cut" />
@@ -68,6 +64,11 @@
                   <Insets right="186.0" />
                </GridPane.margin>
             </MenuButton>
+            <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <content>
+                  <TilePane fx:id="pics" hgap="30.0" prefColumns="4" prefRows="1" vgap="30.0" />
+               </content>
+            </ScrollPane>
          </children>
       </GridPane>
    </children>

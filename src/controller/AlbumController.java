@@ -3,6 +3,7 @@ package controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -23,11 +24,13 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Album;
 import model.Photo;
@@ -40,7 +43,16 @@ public class AlbumController {
   
   @FXML private Label headerLabel;
   
-  @FXML private AnchorPane pics;
+  @FXML private TilePane pics;
+  
+  @FXML
+  private Button view;
+
+  @FXML
+  private Button delete;
+
+  @FXML
+  private Button add;
   
   File[] stockPhoto;
   
@@ -72,37 +84,26 @@ public class AlbumController {
     
     headerLabel.setText(album.getName());
     
-    if(LoginController.currUser.getUserKey().equalsIgnoreCase("stock") && LoginController.counter == 0)
+    if(LoginController.currUser.getUserKey().equalsIgnoreCase("stock"))
 	{
-
-    	File directory = new File("IMG");
-
-    	if(directory.isDirectory())
+        Iterator<Photo> photos = LoginController.currUser.getAlbumList().get("stock").getListOfPhotos().values().iterator();
+      
+    	while(photos.hasNext())
     	{
-    		stockPhoto = directory.listFiles();
-    	}
-
-    	for(File f: stockPhoto)
-    	{
-    		fileStock.add(f);
-    	}
-
-    	for(int i = 0; i < fileStock.size(); i++)
-    	{
-    		Photo tempPhoto = new Photo(fileStock.get(i).toURI().toString(), "", fileStock.get(i));
-    		Image image = new Image(fileStock.get(i).toURI().toString());
+    		
+    		Image image = new Image(photos.next().getFile().toURI().toString());
+    		
     		ImageView imageView= new ImageView();
     		imageView.setImage(image);
     		imageView.setFitHeight(110);
-    		imageView.setFitWidth(110);
+            imageView.setFitWidth(110);
+            
     		pics.getChildren().addAll(imageView);
-    		LoginController.currUser.getAlbumList().get(album.getName()).addPhoto(tempPhoto);
 
     	}
     	
     	
-    	LoginController.counter++;
-    		
+    
     	
 	}	
     	
@@ -127,6 +128,35 @@ public void startA(Album thisAlbum) {
   
   public static void closeAlbum() {
 	}
+  
+  @FXML
+  void add(ActionEvent event) {
+    FileChooser f = new FileChooser();
+    File file = f.showOpenDialog(primaryStage);
+    
+    Photo photo = new Photo(file.toURI().toString(), "", file);
+    album.addPhoto(photo);
+    Image image = new Image(photo.getFile().toURI().toString());
+    
+    ImageView imageView= new ImageView();
+    imageView.setImage(image);
+    imageView.setFitHeight(110);
+    imageView.setFitWidth(110);
+    
+    pics.getChildren().addAll(imageView);
+        
+
+  }
+
+  @FXML
+  void delete(ActionEvent event) {
+
+  }
+  
+  @FXML
+  void view(ActionEvent event) {
+
+  }
   
   
   private void displayImages(String album)
