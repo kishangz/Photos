@@ -74,6 +74,8 @@ public class UserController {
   @FXML
   TableColumn<Album, String> latestCol;  
   
+  private Photo clipboard = null;
+  
   @FXML private Label headerLabel;
   
   @FXML private TilePane pics; 
@@ -98,7 +100,9 @@ public class UserController {
   private HashMap<String, Album> albumList; 
   private ObservableList<Album> obsList = FXCollections.observableArrayList();
  
-  
+  public void setClipboard(Photo clipboard) {   
+    this.clipboard = clipboard;    
+  } 
   
   
   public void setUserList(HashMap<String, User> userList) {   
@@ -232,6 +236,7 @@ public class UserController {
     
     albumController.setUser(user);
     albumController.setAlbum(table.getSelectionModel().getSelectedItem());
+    //albumController.setClipboard(clipboard);
     albumController.start(primaryStage);
     
     primaryStage.getScene().setRoot(root);
@@ -308,7 +313,21 @@ public class UserController {
   }
 
   @FXML
-  void search(ActionEvent event) {
+  void search(ActionEvent event) throws IOException {
+    
+    FXMLLoader loader = new FXMLLoader();
+    loader.setLocation(getClass().getResource("/view/Search.fxml"));
+    AnchorPane root = (AnchorPane)loader.load();
+    
+    SearchController searchController = loader.getController();
+    
+    
+    searchController.setClipboard(clipboard);
+    searchController.setPreviousWindow("user");
+    searchController.start(primaryStage);
+    
+    primaryStage.getScene().setRoot(root);
+    primaryStage.show();  
 
   }
 

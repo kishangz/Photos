@@ -72,7 +72,7 @@ public class PhotoController {
 			File photoFile = keyPhoto.getFile();
 			Image image = new Image(photoFile.toURI().toString());
 			imageView.setImage(image);
-			System.out.print(thisPhotoList.size());
+			//System.out.print(thisPhotoList.size());
 			
 		
 		}

@@ -172,8 +172,7 @@ public void startA(Album thisAlbum) {
 	{
 		Node temp1 = childNode.get(i);
 		temp1.setOnMouseClicked(Event -> {
-			System.out.println("lodo");
-
+			
 			imageSelect((ImageView) temp1);
 
 		});
@@ -303,7 +302,7 @@ public void startA(Album thisAlbum) {
 
   private void imageSelect(ImageView imageView) {
 	  imageStack.push(imageView);
-	  System.out.println("on stack");
+	  //System.out.println("on stack");
 }
 
   @FXML
