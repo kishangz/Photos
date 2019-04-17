@@ -92,9 +92,7 @@ public class PhotoController {
 		this.primaryStage = primaryStage;
 		isCaptioned.setText(caption);
 		
-		date.setText("lodo");
 		isCaptioned.setEditable(false);
-		 //table.setItems(obsList);
 		obsList = FXCollections.observableArrayList(tagsList);
 		table1.setItems(obsList);
 		tableCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getType()));
