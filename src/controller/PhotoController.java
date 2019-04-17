@@ -73,9 +73,13 @@ public class PhotoController {
 	
 	@FXML private TableView<Tag> table1;
 	
+	@FXML private Label date;
+
 	private Stage primaryStage;
 	
 	private ArrayList<Photo> thisPhotoList;
+	
+	private ArrayList<Tag> tagsList;
 	
 	private Album prevAlbum;
 	
@@ -83,11 +87,18 @@ public class PhotoController {
 	
 	private int i = 0; 
 	
-	public void start(Stage primaryStage, ArrayList<Photo> PhotoList) throws Exception {
+	public void start(Stage primaryStage, ArrayList<Photo> PhotoList, String caption) throws Exception {
 		
 		this.primaryStage = primaryStage;
+		isCaptioned.setText(caption);
 		
+		date.setText("lodo");
+		isCaptioned.setEditable(false);
 		 //table.setItems(obsList);
+		obsList = FXCollections.observableArrayList(tagsList);
+		table1.setItems(obsList);
+		tableCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getType()));
+		valueCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getValue()));
 		
 		if(PhotoList.isEmpty()) {
 			System.out.println("its empty boss");
@@ -98,12 +109,31 @@ public class PhotoController {
 			File photoFile = keyPhoto.getFile();
 			Image image = new Image(photoFile.toURI().toString());
 			imageView.setImage(image);
-			//System.out.print(thisPhotoList.size());**/
-			
+			//System.out.print(thisPhotoList.size());**/	
 		
 		}
+		
+		
+		primaryStage.setOnCloseRequest(event -> {
+		      
+		      try {
+		           UsersList.save(LoginController.userList.getUserList());
+		       } catch (IOException er) {
+		           // TODO Auto-generated catch block
+		           er.printStackTrace();
+		       }
+		       
+		    });
+		
+		
+		
 	}
 	
+	public void setTagsList(ArrayList<Tag> tagsList)
+	{
+		this.tagsList = tagsList;
+	}
+
 	public void setAlbum(Album album) {   
 	    this.prevAlbum = album;    
 	  }
@@ -165,7 +195,6 @@ public class PhotoController {
 	{
 		this.imageView.setImage(itsImage);
 	}
-	
 	
 	
 	 @FXML
@@ -263,9 +292,10 @@ public class PhotoController {
 						alert2.showAndWait();
 				    }
 				    else
-				    {				    	
+				    {
+				    	
 				    	Photo currAlbumString = thisPhotoList.get(i);
-				    	Album currAlbum = LoginController.currUser.getAlbumList().get(currAlbumString);
+				    	//Album currAlbum = LoginController.currUser.getAlbumList().get(prevAlbum.getName());
 				    	//Photo currPhoto = currAlbum.getListOfPhotos();
 				    	model.Tag tempTag = new model.Tag(tagType, tagValue);
 
@@ -279,7 +309,8 @@ public class PhotoController {
 				    	}
 				    	else 
 				    	{
-				    		currAlbumString.addTag(tempTag);
+				    		LoginController.currUser.getAlbumList().get(prevAlbum.getName()).getListOfPhotos().get(currAlbumString.getPhotoName()).addTag(tempTag);
+				    		//currAlbumString.addTag(tempTag);
 				    		System.out.println(tagType);
 						    System.out.println(tagValue);
 						    System.out.println(tempTag);
@@ -293,6 +324,23 @@ public class PhotoController {
 				});
 			} 
 	 }
+	 
+	  @FXML
+	  void deleteTag (ActionEvent event) {
+	    Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure that you want to delete this album?");
+	    alert.initOwner(primaryStage);
+	            
+	    Optional<ButtonType> result = alert.showAndWait();
+	    if (result.isPresent() && result.get() == ButtonType.OK) {  
+	        
+	    	Photo currAlbumString = thisPhotoList.get(i);
+	    	Tag temp = table1.getSelectionModel().getSelectedItem();
+	    	
+    		LoginController.currUser.getAlbumList().get(prevAlbum.getName()).getListOfPhotos().get(currAlbumString.getPhotoName()).deleteTag(temp);
+	        obsList.remove(table1.getSelectionModel().getSelectedItem());
+	    }
+
+	  }
 	 
 	 @FXML
 	  private void logout(ActionEvent ae) throws IOException {

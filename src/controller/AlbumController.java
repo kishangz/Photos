@@ -64,8 +64,7 @@ public class AlbumController {
   @FXML private TextField search;
   
   File[] stockPhoto;
-  
-  ListView<String> listView;   
+    
   ObservableList<String> obsList; 
   
   private Photo clipboard = null;
@@ -75,6 +74,8 @@ public class AlbumController {
   private Stack<ImageView> imageStack = new Stack<ImageView>();
   
   private ArrayList<Photo> PhotoList = new ArrayList<Photo>();
+  
+  private String caption;
   
   @FXML private Button back; 
   
@@ -98,14 +99,11 @@ public class AlbumController {
     this.primaryStage = primaryStage; 
     
     headerLabel.setText(album.getName());
-    
-    
     	
     displayImages(album.getName());    	    
 
     primaryStage.setOnCloseRequest(event -> {
      
-      
       try {
            UsersList.save(LoginController.userList.getUserList());
        } catch (IOException er) {
@@ -122,7 +120,7 @@ public class AlbumController {
     File file = f.showOpenDialog(primaryStage);
     
     if (file != null) {
-      String caption = "";
+      caption = "";
       TextInputDialog d = new TextInputDialog();
       d.setTitle("Add Caption");
       d.setHeaderText("Add caption");
@@ -163,9 +161,6 @@ public class AlbumController {
           });
       }
     }
-    
-        
-
   }
 
   @FXML
@@ -194,28 +189,33 @@ public class AlbumController {
 			Album temp = LoginController.currUser.getAlbumList().get(album.getName());
 			displayImages(album.getName());
 			
-		}
-	  
+		}	  
 
   }
   
   @FXML
   void view(ActionEvent event) throws IOException {
 	  
-	  //JUST ADDED
-
 	  FXMLLoader loader = new FXMLLoader();
 	  loader.setLocation(getClass().getResource("/view/Photo.fxml"));
 	  AnchorPane root = (AnchorPane)loader.load();
+	  
+	  ImageView popedImage = imageStack.pop();
+
+	  int imageIndex = pics.getChildren().indexOf(popedImage);
+
+	  Photo imagePhoto = PhotoList.get(imageIndex);
 
 	  PhotoController listController = loader.getController();
 	  
-	  listController.setImageInView(imageStack.pop().getImage());
+	  listController.setImageInView(popedImage.getImage());
+	  
+	  listController.setTagsList(LoginController.currUser.getAlbumList().get(album.getName()).getListOfPhotos().get(imagePhoto.getPhotoName()).getTags());
 	  
 	  listController.setAlbum(this.album);
 	  
 	  try {
-			listController.start(primaryStage, PhotoList);
+			listController.start(primaryStage, PhotoList, caption);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -223,7 +223,6 @@ public class AlbumController {
 	    
 	    primaryStage.getScene().setRoot(root);
 	    primaryStage.show();
-	  
   }
    
   private void displayImages(String album)
@@ -283,7 +282,6 @@ public class AlbumController {
 				
 			});
 		}
-		
 	}
   
 
@@ -293,12 +291,12 @@ public class AlbumController {
 	  i.setEffect(null);
     }
     imageStack.push(imageView);
-	  //System.out.println("on stack");
+
 	  DropShadow dropShadow = new DropShadow();
 	  dropShadow.setColor(Color.DODGERBLUE);
 	  imageView.setEffect(dropShadow);
 }
-
+  
   @FXML
   private void back(ActionEvent ae) throws IOException {
     try {
@@ -312,8 +310,7 @@ public class AlbumController {
     AnchorPane root = (AnchorPane)loader.load();
     
     UserController userController = loader.getController();
-    
-    
+   
     userController.start(primaryStage);
     
     primaryStage.getScene().setRoot(root);
@@ -357,7 +354,6 @@ public class AlbumController {
         // TODO Auto-generated catch block
         er.printStackTrace();
      }
-      
       
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(getClass().getResource("/view/Login.fxml"));

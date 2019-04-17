@@ -56,14 +56,9 @@ public class AccountController {
   void createAccount(ActionEvent ae) throws IOException {
     if (LoginController.userList.getUser(accountField.getText().trim()) == null) {
     	
-    	//Since we dont have a password field im going
-    	// to use the username as key and string for hashMap.
     	String id = (accountField.getText()).trim();
     	String name = (accountField.getText()).trim();
     	
-     
-      
-     
       if(name.equalsIgnoreCase("") && id.equalsIgnoreCase(""))
       {
     	  Alert alert2 = new Alert(AlertType.INFORMATION);
@@ -74,7 +69,6 @@ public class AccountController {
     	  return;
       }
       
-      
       LoginController.userList.addUser(accountField.getText(), accountField.getText());
       
       if (previousWindow.equals("login")) {       
@@ -84,8 +78,6 @@ public class AccountController {
         AnchorPane root = (AnchorPane)loader.load();
         
         UserController userController = loader.getController();
-        
-        
         userController.start(primaryStage);
         
         primaryStage.getScene().setRoot(root);
@@ -108,9 +100,6 @@ public class AccountController {
     } else {
       errorLabel.setVisible(true);
     }
-    
-    
-    
   }
   
   @FXML
@@ -122,7 +111,6 @@ public class AccountController {
       AnchorPane root = (AnchorPane)loader.load();
       
       LoginController loginController = loader.getController();
-      
       loginController.start(primaryStage);
       
       primaryStage.getScene().setRoot(root);

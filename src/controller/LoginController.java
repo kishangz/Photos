@@ -31,23 +31,13 @@ public class LoginController {
   protected static User currUser;
   
   public static int counter = 0;
-  
-  
-  
+ 
   public static UsersList userList;
   
-  //Temporarily just creating the user list here rather than passing it in from the main method after 
-  // loading it from file;
-  
-  
-
   public void start(Stage primaryStage) throws FileNotFoundException, IOException {   
     this.primaryStage = primaryStage;
-    
-    
-    
+      
     primaryStage.setOnCloseRequest(event -> {
-		
 		
 		try {
 			 UsersList.save(userList.getUserList());
@@ -55,7 +45,6 @@ public class LoginController {
 			 // TODO Auto-generated catch block
 			 er.printStackTrace();
 		 }
-		 
 	});
     
   }
@@ -76,7 +65,6 @@ public class LoginController {
   private void login(ActionEvent ae) throws IOException { 
 	  
 	  userEntered = loginField.getText().trim(); 	
-  	
     
     if(userEntered.equalsIgnoreCase("admin")) {
       
@@ -106,8 +94,7 @@ public class LoginController {
 		AnchorPane root = (AnchorPane)loader.load();
 		
 		UserController userController = loader.getController();
-		
-        
+	
         userController.start(primaryStage);
     	
         primaryStage.getScene().setRoot(root);
@@ -126,7 +113,6 @@ public class LoginController {
         
         UserController userController = loader.getController();
         
-        
         userController.start(primaryStage);
         
         primaryStage.getScene().setRoot(root);
@@ -141,9 +127,7 @@ public class LoginController {
   
   @FXML
   private void signUp(ActionEvent ae) throws IOException {
-    
-    
-    
+   
     FXMLLoader loader = new FXMLLoader();
     loader.setLocation(getClass().getResource("/view/Account.fxml"));
     AnchorPane root = (AnchorPane)loader.load();
