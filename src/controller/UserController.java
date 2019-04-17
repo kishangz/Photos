@@ -56,8 +56,7 @@ public class UserController {
   @FXML
   private Button add;
   
-  @FXML
-  private TextField search;
+  
 
   @FXML
   private TableView<Album> table;
@@ -323,7 +322,6 @@ public class UserController {
     
     
     searchController.setClipboard(clipboard);
-    searchController.setInput(search.getText());
     searchController.setPreviousWindow("user");
     searchController.start(primaryStage);
     

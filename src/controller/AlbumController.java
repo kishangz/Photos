@@ -26,6 +26,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
@@ -61,7 +62,14 @@ public class AlbumController {
   @FXML
   private Button add;
   
-  @FXML private TextField search;
+  @FXML
+  private MenuItem cut;
+
+  @FXML
+  private MenuItem copy;
+
+  @FXML
+  private MenuItem paste;
   
   File[] stockPhoto;
   
@@ -134,7 +142,7 @@ public class AlbumController {
         caption = result.get();
       }         
       
-      Photo photo = new Photo(file.toURI().toString(), "", file);
+      Photo photo = new Photo(file.toURI().toString(), caption, file);
       album.addPhoto(photo);
       Image image = new Image(photo.getFile().toURI().toString());
       
@@ -146,6 +154,7 @@ public class AlbumController {
       imageView.setFitWidth(110);
       
       imageView.setPickOnBounds(true);
+      imageView.setUserData(photo.getPhotoName());
       
       pics.getChildren().addAll(imageView);
       
@@ -200,9 +209,71 @@ public class AlbumController {
   }
   
   @FXML
+  void copy(ActionEvent event) {
+    
+    if (!imageStack.isEmpty()) {
+      clipboard = album.getListOfPhotos().get(imageStack.peek().getUserData());
+    }
+    
+  }
+
+  @FXML
+  void cut(ActionEvent event) {
+    
+    if (!imageStack.isEmpty()) {
+      ImageView imageView = imageStack.pop();
+      clipboard = album.getListOfPhotos().get(imageView.getUserData());
+      album.removePhoto(clipboard.getPhotoName());
+      pics.getChildren().remove(imageView);
+      PhotoList.remove(clipboard);
+    }
+    
+  }
+  
+  
+  @FXML
+  void paste(ActionEvent event) {
+    if (clipboard != null) {
+      album.addPhoto(clipboard);
+      
+      Image image = new Image(clipboard.getFile().toURI().toString());
+      
+      ImageView imageView= new ImageView();
+      imageView.setImage(image);
+      imageView.setFitHeight(110);
+      imageView.setFitWidth(110);
+    
+      imageView.setUserData(clipboard.getPhotoName());      
+      
+      pics.getChildren().addAll(imageView);
+      
+      PhotoList.add(clipboard);
+      
+      ObservableList<Node> childNode = pics.getChildren();
+
+      for(int i = 0; i < childNode.size(); i++)
+      {
+          Node temp1 = childNode.get(i);
+          temp1.setOnMouseClicked(Event -> {
+              
+              imageSelect((ImageView) temp1);
+
+          });
+      }
+      
+    }
+    
+
+  }
+  
+  @FXML
   void view(ActionEvent event) throws IOException {
 	  
 	  //JUST ADDED
+    if (imageStack.isEmpty()) {
+      return;
+      
+    }
 
 	  FXMLLoader loader = new FXMLLoader();
 	  loader.setLocation(getClass().getResource("/view/Photo.fxml"));
@@ -261,6 +332,7 @@ public class AlbumController {
 				File photoFile = keyPhoto.getFile();
 				Image image = new Image(photoFile.toURI().toString());
 				ImageView imageView= new ImageView();
+				imageView.setUserData(keyPhoto.getPhotoName());
 				imageView.setImage(image);
 				imageView.setFitHeight(110);
 				imageView.setFitWidth(110);
@@ -309,9 +381,11 @@ public class AlbumController {
     
     FXMLLoader loader = new FXMLLoader();
     loader.setLocation(getClass().getResource("/view/User.fxml"));
+    
     AnchorPane root = (AnchorPane)loader.load();
     
     UserController userController = loader.getController();
+    userController.setClipboard(clipboard);
     
     
     userController.start(primaryStage);
@@ -323,7 +397,7 @@ public class AlbumController {
   
   @FXML
   void search(ActionEvent event) throws IOException {
-    if (search.getText() != null) {
+    
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(getClass().getResource("/view/Search.fxml"));
       AnchorPane root = (AnchorPane)loader.load();
@@ -331,14 +405,13 @@ public class AlbumController {
       SearchController searchController = loader.getController();
       
       searchController.setAlbum(album);
-      searchController.setInput(search.getText());
       searchController.setPreviousWindow("album");
       searchController.setClipboard(clipboard);
       searchController.start(primaryStage);
       
       primaryStage.getScene().setRoot(root);
       primaryStage.show();  
-    }
+    
       
   }
 

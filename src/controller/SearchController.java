@@ -58,8 +58,6 @@ public class SearchController {
   private Photo clipboard;
 
   private Album album;
-
-  private String input;
   
   private ArrayList<Photo> results = new ArrayList<Photo>();
   
@@ -68,9 +66,6 @@ public class SearchController {
   public void start(Stage primaryStage) {   
     this.primaryStage = primaryStage; 
     
-    searchLabel.setText("Results for \"" + input + "\":");
-    
-    searchByTags(input);
     
     primaryStage.setOnCloseRequest(event -> {     
       
@@ -82,11 +77,7 @@ public class SearchController {
        }
        
     });
-  }
-  
-  public void setInput(String input) {   
-    this.input = input;    
-  }
+  }  
   
   public void setPreviousWindow(String previousWindow) {   
     this.previousWindow = previousWindow;    
@@ -105,11 +96,8 @@ public class SearchController {
     pics.getChildren().clear();
     results.clear();
     searchLabel.setText("Results for \"" + tagSearchField.getText() + "\":");
-    searchByTags(tagSearchField.getText());
-
-  }
-  
-  private void searchByTags(String input) {
+    String input = tagSearchField.getText();
+    
     if (input.equals("")) {
       return;
     }
