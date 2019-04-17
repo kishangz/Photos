@@ -38,7 +38,6 @@ public class AdminController {
   private ObservableList<String> obsList = FXCollections.observableArrayList();  
   @FXML private ListView<String> listView;
   
-  
 
   public void start(Stage primaryStage) {   
     this.primaryStage = primaryStage;   
@@ -66,15 +65,13 @@ public class AdminController {
     });
     
     primaryStage.setOnCloseRequest(event -> {
-		
-		
+    	
 		try {
 			 UsersList.save(LoginController.userList.getUserList());
 		 } catch (IOException er) {
 			 // TODO Auto-generated catch block
 			 er.printStackTrace();
 		 }
-		 
 	});
     
   }
@@ -106,10 +103,6 @@ public class AdminController {
         LoginController.userList.getUserList().remove(listView.getSelectionModel().getSelectedItem());
         obsList.remove(listView.getSelectionModel().getSelectedItem());
     }
-  }
-  
-  public void startA() {
-	  
   }
 	
 
