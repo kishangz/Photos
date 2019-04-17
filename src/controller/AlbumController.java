@@ -18,6 +18,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -31,6 +33,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Album;
 import model.Photo;
@@ -73,7 +76,7 @@ public class AlbumController {
   
   public void setAlbum(Album album) {   
     this.album = album;    
-  }  
+  }
   
   public void setUser(User user) {   
     this.user = user;         
@@ -99,10 +102,22 @@ public class AlbumController {
             imageView.setFitWidth(110);
             
     		pics.getChildren().addAll(imageView);
+    		
+    		imageView.setPickOnBounds(true);
 
     	}
     	
-    	
+    	ObservableList<Node> childNode = pics.getChildren();
+
+    	for(int i = 0; i < childNode.size(); i++)
+    	{
+    		Node temp1 = childNode.get(i);
+    		temp1.setOnMouseClicked(Event -> {
+
+    			imageSelect((ImageView) temp1);
+
+    		});
+    	}
     
     	
 	}	
@@ -138,27 +153,93 @@ public void startA(Album thisAlbum) {
     album.addPhoto(photo);
     Image image = new Image(photo.getFile().toURI().toString());
     
+    LoginController.currUser.getAlbumList().get(album.getName()).addPhoto(photo);
+    
     ImageView imageView= new ImageView();
     imageView.setImage(image);
     imageView.setFitHeight(110);
     imageView.setFitWidth(110);
     
+    imageView.setPickOnBounds(true);
+    
     pics.getChildren().addAll(imageView);
+    
+    PhotoList.add(photo);
+    
+    ObservableList<Node> childNode = pics.getChildren();
+
+	for(int i = 0; i < childNode.size(); i++)
+	{
+		Node temp1 = childNode.get(i);
+		temp1.setOnMouseClicked(Event -> {
+			System.out.println("lodo");
+
+			imageSelect((ImageView) temp1);
+
+		});
+	}
         
 
   }
 
   @FXML
   void delete(ActionEvent event) {
+	  
+	  if(imageStack.isEmpty())
+		{
+			Alert alert2 = new Alert(AlertType.INFORMATION);
+			alert2.setTitle("Information Dialog");
+			alert2.setHeaderText(null);
+			alert2.setContentText("click on the image first");
+			alert2.showAndWait();
+		}
+		else
+		{
+			
+			ImageView popedImage = imageStack.pop();
+
+			int imageIndex = pics.getChildren().indexOf(popedImage);
+
+			Photo imagePhoto = PhotoList.get(imageIndex);
+			LoginController.currUser.getAlbumList().get(album.getName()).getListOfPhotos().remove(imagePhoto.getPhotoName());
+			pics.getChildren().remove(popedImage);// delete from tile pane
+
+			PhotoList.remove(popedImage);// delete from photoList (array)
+			Album temp = LoginController.currUser.getAlbumList().get(album.getName());
+			displayImages(album.getName());
+			
+		}
+	  
 
   }
   
   @FXML
-  void view(ActionEvent event) {
+  void view(ActionEvent event) throws IOException {
+	  
+	  //JUST ADDED
 
+	  FXMLLoader loader = new FXMLLoader();
+	  loader.setLocation(getClass().getResource("/view/Photo.fxml"));
+	  AnchorPane root = (AnchorPane)loader.load();
+
+	  PhotoController listController = loader.getController();
+	  
+	  listController.setImageInView(imageStack.pop().getImage());
+	  
+	  listController.setAlbum(this.album);
+	  
+	  try {
+			listController.start(primaryStage, PhotoList);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+	    primaryStage.getScene().setRoot(root);
+	    primaryStage.show();
+	  
   }
-  
-  
+   
   private void displayImages(String album)
 	{
 		
@@ -212,11 +293,6 @@ public void startA(Album thisAlbum) {
 			Node temp = childNode.get(i);
 			temp.setOnMouseClicked(Event -> {
 				
-				if(!imageStack.isEmpty())
-				{
-					imageStack.pop();
-				}
-				
 				imageSelect((ImageView) temp);
 				
 			});
@@ -226,12 +302,8 @@ public void startA(Album thisAlbum) {
   
 
   private void imageSelect(ImageView imageView) {
-	// TODO Auto-generated method stub
-	  
 	  imageStack.push(imageView);
-	  int imageDex = pics.getChildren().indexOf(imageView);
-	  Photo imagePhoto = PhotoList.get(imageDex);
-	
+	  System.out.println("on stack");
 }
 
   @FXML
@@ -239,7 +311,6 @@ public void startA(Album thisAlbum) {
     try {
       UsersList.save(LoginController.userList.getUserList());
    } catch (IOException er) {
-      // TODO Auto-generated catch block
       er.printStackTrace();
    }
     
