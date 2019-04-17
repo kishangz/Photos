@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -16,6 +17,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
@@ -44,6 +47,8 @@ public class PhotoController {
      * next button
      */
 	@FXML private Button next;
+	
+	@FXML private Hyperlink logout;
 	
 	@FXML ListView<Tag> tagView;
 	
@@ -156,6 +161,36 @@ public class PhotoController {
 	    
 	    primaryStage.getScene().setRoot(root);
 	    primaryStage.show();    
+	    
+	  }
+	 
+	 @FXML
+	  private void logout(ActionEvent ae) throws IOException {
+	    
+	    Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure that you want to logout?");
+	    alert.initOwner(primaryStage);
+	            
+	    Optional<ButtonType> result = alert.showAndWait();
+	    if (result.isPresent() && result.get() == ButtonType.OK) {  
+	      
+	     try {
+	        UsersList.save(LoginController.userList.getUserList());
+	     } catch (IOException er) {
+	        // TODO Auto-generated catch block
+	        er.printStackTrace();
+	     }
+	      
+	      
+	      FXMLLoader loader = new FXMLLoader();
+	      loader.setLocation(getClass().getResource("/view/Login.fxml"));
+	      AnchorPane root = (AnchorPane)loader.load();
+	      
+	      LoginController loginController = loader.getController();
+	      loginController.start(primaryStage);
+	      
+	      primaryStage.getScene().setRoot(root);
+	      primaryStage.show();
+	    }
 	    
 	  }
 	
