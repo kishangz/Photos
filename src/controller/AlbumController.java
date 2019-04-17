@@ -116,13 +116,6 @@ public class AlbumController {
     });
   }
   
-public void startA(Album thisAlbum) {
-	  
-  }
-  
-  public static void closeAlbum() {
-	}
-  
   @FXML
   void add(ActionEvent event) {
     FileChooser f = new FileChooser();

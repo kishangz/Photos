@@ -7,26 +7,35 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Stack;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import model.Album;
 import model.Photo;
 import model.Tag;
@@ -50,23 +59,35 @@ public class PhotoController {
 	
 	@FXML private Hyperlink logout;
 	
-	@FXML ListView<Tag> tagView;
-	
-	@FXML private ObservableList<Tag> obsList;
+	//@FXML private ObservableList<Tag> obsList;
 	
 	@FXML private Button back; 
+	
+	@FXML private Button addTag; 
+	
+	@FXML private Button deleteTag; 
+	
+	@FXML TableColumn<Tag, String> tableCol;
 
+	@FXML TableColumn<Tag, String> valueCol; 
+	
+	@FXML private TableView<Tag> table1;
+	
 	private Stage primaryStage;
 	
 	private ArrayList<Photo> thisPhotoList;
 	
 	private Album prevAlbum;
 	
+	private ObservableList<Tag> obsList = FXCollections.observableArrayList();
+	
 	private int i = 0; 
 	
 	public void start(Stage primaryStage, ArrayList<Photo> PhotoList) throws Exception {
 		
 		this.primaryStage = primaryStage;
+		
+		 //table.setItems(obsList);
 		
 		if(PhotoList.isEmpty()) {
 			System.out.println("its empty boss");
@@ -171,6 +192,107 @@ public class PhotoController {
 	    primaryStage.show();    
 	    
 	  }
+	 
+	 
+	 @FXML private void addTag(ActionEvent ae) throws IOException{
+		 
+		 //System.out.print(thisPhotoList.size());
+		 if(thisPhotoList.isEmpty())
+			{
+				Alert alert2 = new Alert(AlertType.INFORMATION);
+				alert2.setTitle("Information Dialog");
+				alert2.setHeaderText(null);
+				alert2.setContentText("click on the image first");
+				alert2.showAndWait();
+			}
+		 
+			else
+			{
+				// Create the custom dialog.
+				javafx.scene.control.Dialog<Pair<String, String>> dialog = new javafx.scene.control.Dialog<>();
+				dialog.setTitle("Add Tag");
+				dialog.setHeaderText("Tags must be in the form Type, Value. EX: location, Edison");
+
+				// Set the button types.
+				ButtonType loginButtonType = new ButtonType("Add Tag", ButtonData.OK_DONE);
+				dialog.getDialogPane().getButtonTypes().addAll(loginButtonType);
+
+				// Create the type and password value and fields.
+				GridPane grid = new GridPane();
+				grid.setHgap(10);
+				grid.setVgap(10);
+				grid.setPadding(new Insets(20, 150, 10, 10));
+
+				TextField type = new TextField();
+				type.setPromptText("Type");
+				TextField value = new TextField();
+				value.setPromptText("Value");
+
+				grid.add(new Label("Tag Type:"), 0, 0);
+				grid.add(type, 1, 0);
+				grid.add(new Label("Tag Value:"), 0, 1);
+				grid.add(value, 1, 1);
+		
+				dialog.getDialogPane().setContent(grid);
+				
+				// Request focus on the username field by default.
+				Platform.runLater(() -> type.requestFocus());
+
+				// Convert the result to a username-password-pair when the login button is clicked.
+				dialog.setResultConverter(dialogButton -> {
+				    if (dialogButton == loginButtonType) {
+				        return new Pair<>(type.getText(), value.getText());
+				    }
+				    return null;
+				});
+				
+				Optional<Pair<String, String>> result = dialog.showAndWait();
+				//Add the tag
+				result.ifPresent(usernamePassword -> {
+					
+				    String tagType = usernamePassword.getKey().trim();
+				    String tagValue = usernamePassword.getValue().trim();
+				   
+				    
+				    if(tagType.equalsIgnoreCase("") || tagValue.equalsIgnoreCase(""))
+				    {
+						Alert alert2 = new Alert(AlertType.INFORMATION);
+						alert2.setTitle("Information Dialog");
+						alert2.setHeaderText(null);
+						alert2.setContentText("How lazy!? You gotta input both fields man!!");
+						alert2.showAndWait();
+				    }
+				    else
+				    {				    	
+				    	Photo currAlbumString = thisPhotoList.get(i);
+				    	Album currAlbum = LoginController.currUser.getAlbumList().get(currAlbumString);
+				    	//Photo currPhoto = currAlbum.getListOfPhotos();
+				    	model.Tag tempTag = new model.Tag(tagType, tagValue);
+
+				    	if(currAlbumString.getTags().contains(tempTag))
+				    	{
+				    		Alert alert2 = new Alert(AlertType.INFORMATION);
+				    		alert2.setTitle("Information Dialog");
+				    		alert2.setHeaderText(null);
+				    		alert2.setContentText("you added this tag a loooooong time ago");
+				    		alert2.showAndWait();
+				    	}
+				    	else 
+				    	{
+				    		currAlbumString.addTag(tempTag);
+				    		System.out.println(tagType);
+						    System.out.println(tagValue);
+						    System.out.println(tempTag);
+				    		obsList.add(tempTag);
+				    		table1.setItems(obsList);
+				    		tableCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getType()));
+				    		valueCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getValue()));
+
+				    	}
+				    }			    
+				});
+			} 
+	 }
 	 
 	 @FXML
 	  private void logout(ActionEvent ae) throws IOException {
