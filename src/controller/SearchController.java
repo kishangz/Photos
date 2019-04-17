@@ -118,11 +118,11 @@ public class SearchController {
     
     String[] s2;
     s2 = s[0].split("=");
+    if (s2.length != 2) {
+      return;
+    }
     String type1 = s2[0].trim();
-    String value1 = s2[1].trim();
-    
-    
-   
+    String value1 = s2[1].trim();   
     
     if (s.length == 1) {
       HashMap<String, Album> albumList = LoginController.currUser.getAlbumList();        
@@ -160,6 +160,9 @@ public class SearchController {
     if (s.length == 2) {
       s[1] = s[1].trim();
       s2 = s[1].split("=");
+      if (s2.length != 2) {
+        return;
+      }
       type2 = s2[0];
       value2 = s2[1];
       

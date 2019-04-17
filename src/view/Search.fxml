@@ -60,7 +60,7 @@
                         <Insets top="243.0" />
                      </GridPane.margin>
                   </DatePicker>
-                  <TextField fx:id="tagSearchField" maxWidth="-Infinity" onAction="#tagSearch" prefWidth="200.0" promptText="type=value [AND/OR] type=value" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                  <TextField fx:id="tagSearchField" maxWidth="-Infinity" onAction="#tagSearch" prefWidth="200.0" promptText="type=value [AND/OR type=value]" GridPane.rowIndex="1" GridPane.valignment="TOP">
                      <GridPane.margin>
                         <Insets top="36.0" />
                      </GridPane.margin>
