@@ -28,6 +28,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
@@ -128,6 +129,18 @@ public void startA(Album thisAlbum) {
     File file = f.showOpenDialog(primaryStage);
     
     if (file != null) {
+      String caption = "";
+      TextInputDialog d = new TextInputDialog();
+      d.setTitle("Add Caption");
+      d.setHeaderText("Add caption");
+      d.setContentText("Enter photo caption:");
+      d.initOwner(primaryStage);
+      
+      Optional<String> result = d.showAndWait();
+      if (result.isPresent()) {
+        caption = result.get();
+      }         
+      
       Photo photo = new Photo(file.toURI().toString(), "", file);
       album.addPhoto(photo);
       Image image = new Image(photo.getFile().toURI().toString());

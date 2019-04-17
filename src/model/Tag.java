@@ -25,6 +25,10 @@ public class Tag implements Serializable  {
 		return false;
 	}
 	
+	public String getType() {
+      return this.type;
+    }
+	
 	public void setType(String t) {
 		
 		this.type = t;

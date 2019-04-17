@@ -1,11 +1,17 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Optional;
-
+import java.util.Stack;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -13,7 +19,12 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.TilePane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.Album;
 import model.Photo;
@@ -26,6 +37,11 @@ public class SearchController {
   @FXML private Label searchLabel;
   
   @FXML private Button back; 
+  
+  @FXML
+  private TilePane pics;
+  
+  private Stack<ImageView> imageStack = new Stack<ImageView>();
 
   private Stage primaryStage;
 
@@ -76,15 +92,179 @@ public class SearchController {
   
   @FXML
   void tagSearch(ActionEvent event) {
+    pics.getChildren().clear();
+    searchLabel.setText("Results for \"" + tagSearchField.getText() + "\":");
     searchByTags(tagSearchField.getText());
 
   }
   
   private void searchByTags(String input) {
-    if (!input.equals("")) {
+    if (input.equals("")) {
+      return;
+    }
       
+    String[] s = input.split("AND | and | OR | or");      
+    
+    String[] s2;
+    s2 = s[0].split("=");
+    String type1 = s2[0].trim();
+    String value1 = s2[1].trim();
+    
+    
+    ArrayList<Photo> results = new ArrayList<Photo>();
+    
+    if (s.length == 1) {
+      HashMap<String, Album> albumList = LoginController.currUser.getAlbumList();        
+      Collection<Album> a = albumList.values();
+      Iterator<Album> aIterator = a.iterator();
+      
+      while (aIterator.hasNext()) {
+        
+        Album album = aIterator.next();
+        
+        HashMap<String, Photo> photoList = album.getListOfPhotos();
+        Collection<Photo> p = photoList.values();
+        Iterator<Photo> pIterator = p.iterator();
+        
+        while (pIterator.hasNext()) {
+          
+          Photo photo = pIterator.next();
+          Iterator<model.Tag> tIterator = photo.getTags().iterator();
+          
+          while (tIterator.hasNext()) {
+            model.Tag tag = tIterator.next();
+            
+            if(type1.equalsIgnoreCase(tag.getType()) && value1.equalsIgnoreCase(tag.getValue())) {
+              results.add(photo);
+              break;
+            }
+          }
+        }          
+      }        
+    }
+    
+    String type2;
+    String value2;    
+    
+    if (s.length == 2) {
+      s[1] = s[1].trim();
+      s2 = s[1].split("=");
+      type2 = s2[0];
+      value2 = s2[1];
+      
+      
+      if (input.contains(" and ") || input.contains(" AND ")) {
+        HashMap<String, Album> albumList = LoginController.currUser.getAlbumList();        
+        Collection<Album> a = albumList.values();
+        Iterator<Album> aIterator = a.iterator();
+        
+        while (aIterator.hasNext()) {
+          
+          Album album = aIterator.next();
+          
+          HashMap<String, Photo> photoList = album.getListOfPhotos();
+          Collection<Photo> p = photoList.values();
+          Iterator<Photo> pIterator = p.iterator();
+          
+          while (pIterator.hasNext()) {
+            
+            Photo photo = pIterator.next();
+            Iterator<model.Tag> tIterator = photo.getTags().iterator();
+            
+            int i = 0;
+            while (tIterator.hasNext()) {
+              model.Tag tag = tIterator.next();
+              
+              if((type1.equalsIgnoreCase(tag.getType()) && value1.equalsIgnoreCase(tag.getValue())) 
+                  || (type2.equalsIgnoreCase(tag.getType()) && value2.equalsIgnoreCase(tag.getValue()))) {
+                
+                if (i == 1) {
+                  results.add(photo);
+                  break;
+                }
+                i++;
+                
+              }
+            }
+          }          
+        }          
+        
+      } else if (input.contains(" or ") || input.contains(" OR ")) {
+        HashMap<String, Album> albumList = LoginController.currUser.getAlbumList();        
+        Collection<Album> a = albumList.values();
+        Iterator<Album> aIterator = a.iterator();
+        
+        while (aIterator.hasNext()) {
+          
+          Album album = aIterator.next();
+          
+          HashMap<String, Photo> photoList = album.getListOfPhotos();
+          Collection<Photo> p = photoList.values();
+          Iterator<Photo> pIterator = p.iterator();
+          
+          while (pIterator.hasNext()) {
+            
+            Photo photo = pIterator.next();
+            Iterator<model.Tag> tIterator = photo.getTags().iterator();              
+        
+            while (tIterator.hasNext()) {
+              model.Tag tag = tIterator.next();
+              
+              if((type1.equalsIgnoreCase(tag.getType()) && value1.equalsIgnoreCase(tag.getValue())) 
+                  || (type2.equalsIgnoreCase(tag.getType()) && value2.equalsIgnoreCase(tag.getValue()))) {
+                  results.add(photo);
+                  break;
+                }             
+                
+              }
+            }
+          }          
+        } 
+       } 
+    
+    
+      
+    Iterator<Photo> rIterator = results.iterator();
+    while (rIterator.hasNext()) 
+    {
+        Photo photo = rIterator.next();
+        Image image = new Image(photo.getFile().toURI().toString());
+        ImageView imageView= new ImageView();
+        imageView.setImage(image);
+        imageView.setFitHeight(110);
+        imageView.setFitWidth(110);
+        pics.getChildren().addAll(imageView);        
     }
 
+    if(!pics.getChildren().isEmpty())
+    {
+      imageSelect((ImageView) pics.getChildren().get(0));
+    }
+  
+    ObservableList<Node> childNode = pics.getChildren();
+  
+    for(int i = 0; i < childNode.size(); i++)
+    {
+        Node temp = childNode.get(i);
+        temp.setOnMouseClicked(Event -> {
+            
+            imageSelect((ImageView) temp);
+            
+        });
+    }
+
+  }
+
+  private void imageSelect(ImageView imageView) {
+    if (!imageStack.isEmpty()) {
+      ImageView i = imageStack.pop();
+      i.setEffect(null);
+    }
+    imageStack.push(imageView);
+    //System.out.println("on stack");
+    DropShadow dropShadow = new DropShadow();
+    dropShadow.setColor(Color.DODGERBLUE);
+    imageView.setEffect(dropShadow);
   }
   
   @FXML
