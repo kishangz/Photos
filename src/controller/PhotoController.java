@@ -73,11 +73,11 @@ public class PhotoController {
 		}
 		else {
 			thisPhotoList = PhotoList;
-			Photo keyPhoto = thisPhotoList.get(i);
+			/**Photo keyPhoto = thisPhotoList.get(i);
 			File photoFile = keyPhoto.getFile();
 			Image image = new Image(photoFile.toURI().toString());
 			imageView.setImage(image);
-			//System.out.print(thisPhotoList.size());
+			//System.out.print(thisPhotoList.size());**/
 			
 		
 		}
@@ -95,40 +95,46 @@ public class PhotoController {
 			{
 				if(i == 0)
 				{
-					Alert alert2 = new Alert(AlertType.INFORMATION);
+					/**Alert alert2 = new Alert(AlertType.INFORMATION);
 					alert2.setTitle("Information Dialog");
 					alert2.setHeaderText(null);
 					alert2.setContentText("How much back do you wanna go?!");
-					alert2.showAndWait();
+					alert2.showAndWait();**/
+				  i = thisPhotoList.size() - 1;
 				}
 				else
 				{
 					i = i - 1;
-					Photo keyPhoto = thisPhotoList.get(i);
-					File photoFile = keyPhoto.getFile();
-					Image image = new Image(photoFile.toURI().toString());
-					imageView.setImage(image);
+					
 				}
+				
+				Photo keyPhoto = thisPhotoList.get(i);
+                File photoFile = keyPhoto.getFile();
+                Image image = new Image(photoFile.toURI().toString());
+                imageView.setImage(image);
 			}
 			else if(pressed == next)
 			{
 				if(i == thisPhotoList.size()-1)
 				{
-					Alert alert2 = new Alert(AlertType.INFORMATION);
+					/**Alert alert2 = new Alert(AlertType.INFORMATION);
 					alert2.setTitle("Information Dialog");
 					alert2.setHeaderText(null);
 					alert2.setContentText("Alright thats it! Thats the end of your images!");
-					alert2.showAndWait();
+					alert2.showAndWait();**/
+				  i = 0;
 				}
 				else
 				{
 					i = i + 1;
-					Photo keyPhoto = thisPhotoList.get(i);
-					File photoFile = keyPhoto.getFile();
-					Image image = new Image(photoFile.toURI().toString());
-					//System.out.println(keyPhoto.toString());
-					imageView.setImage(image);
+					
 				}
+				
+				Photo keyPhoto = thisPhotoList.get(i);
+                File photoFile = keyPhoto.getFile();
+                Image image = new Image(photoFile.toURI().toString());
+                //System.out.println(keyPhoto.toString());
+                imageView.setImage(image);
 			}
 
 		}
@@ -138,6 +144,8 @@ public class PhotoController {
 	{
 		this.imageView.setImage(itsImage);
 	}
+	
+	
 	
 	 @FXML
 	  private void back(ActionEvent ae) throws IOException {

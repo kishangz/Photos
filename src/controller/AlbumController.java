@@ -27,11 +27,14 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -57,10 +60,14 @@ public class AlbumController {
   @FXML
   private Button add;
   
+  @FXML private TextField search;
+  
   File[] stockPhoto;
   
   ListView<String> listView;   
   ObservableList<String> obsList; 
+  
+  private Photo clipboard = null;
   
   ArrayList<File> fileStock = new ArrayList<File>(); 
   
@@ -81,46 +88,17 @@ public class AlbumController {
   public void setUser(User user) {   
     this.user = user;         
   } 
+  
+  public void setClipboard(Photo clipboard) {   
+    this.clipboard = clipboard;    
+  } 
 
   public void start(Stage primaryStage) {   
     this.primaryStage = primaryStage; 
     
     headerLabel.setText(album.getName());
     
-    if(LoginController.currUser.getUserKey().equalsIgnoreCase("stock"))
-	{
-        Iterator<Photo> photos = LoginController.currUser.getAlbumList().get("stock").getListOfPhotos().values().iterator();
-      
-    	while(photos.hasNext())
-    	{
-    		
-    		Image image = new Image(photos.next().getFile().toURI().toString());
-    		
-    		ImageView imageView= new ImageView();
-    		imageView.setImage(image);
-    		imageView.setFitHeight(110);
-            imageView.setFitWidth(110);
-            
-    		pics.getChildren().addAll(imageView);
-    		
-    		imageView.setPickOnBounds(true);
-
-    	}
-    	
-    	ObservableList<Node> childNode = pics.getChildren();
-
-    	for(int i = 0; i < childNode.size(); i++)
-    	{
-    		Node temp1 = childNode.get(i);
-    		temp1.setOnMouseClicked(Event -> {
-
-    			imageSelect((ImageView) temp1);
-
-    		});
-    	}
     
-    	
-	}	
     	
     displayImages(album.getName());    	    
 
@@ -149,34 +127,37 @@ public void startA(Album thisAlbum) {
     FileChooser f = new FileChooser();
     File file = f.showOpenDialog(primaryStage);
     
-    Photo photo = new Photo(file.toURI().toString(), "", file);
-    album.addPhoto(photo);
-    Image image = new Image(photo.getFile().toURI().toString());
-    
-    LoginController.currUser.getAlbumList().get(album.getName()).addPhoto(photo);
-    
-    ImageView imageView= new ImageView();
-    imageView.setImage(image);
-    imageView.setFitHeight(110);
-    imageView.setFitWidth(110);
-    
-    imageView.setPickOnBounds(true);
-    
-    pics.getChildren().addAll(imageView);
-    
-    PhotoList.add(photo);
-    
-    ObservableList<Node> childNode = pics.getChildren();
+    if (file != null) {
+      Photo photo = new Photo(file.toURI().toString(), "", file);
+      album.addPhoto(photo);
+      Image image = new Image(photo.getFile().toURI().toString());
+      
+      LoginController.currUser.getAlbumList().get(album.getName()).addPhoto(photo);
+      
+      ImageView imageView= new ImageView();
+      imageView.setImage(image);
+      imageView.setFitHeight(110);
+      imageView.setFitWidth(110);
+      
+      imageView.setPickOnBounds(true);
+      
+      pics.getChildren().addAll(imageView);
+      
+      PhotoList.add(photo);
+      
+      ObservableList<Node> childNode = pics.getChildren();
 
-	for(int i = 0; i < childNode.size(); i++)
-	{
-		Node temp1 = childNode.get(i);
-		temp1.setOnMouseClicked(Event -> {
-			
-			imageSelect((ImageView) temp1);
+      for(int i = 0; i < childNode.size(); i++)
+      {
+          Node temp1 = childNode.get(i);
+          temp1.setOnMouseClicked(Event -> {
+              
+              imageSelect((ImageView) temp1);
 
-		});
-	}
+          });
+      }
+    }
+    
         
 
   }
@@ -301,8 +282,15 @@ public void startA(Album thisAlbum) {
   
 
   private void imageSelect(ImageView imageView) {
-	  imageStack.push(imageView);
+	if (!imageStack.isEmpty()) {
+	  ImageView i = imageStack.pop();
+	  i.setEffect(null);
+    }
+    imageStack.push(imageView);
 	  //System.out.println("on stack");
+	  DropShadow dropShadow = new DropShadow();
+	  dropShadow.setColor(Color.DODGERBLUE);
+	  imageView.setEffect(dropShadow);
 }
 
   @FXML
@@ -325,6 +313,27 @@ public void startA(Album thisAlbum) {
     primaryStage.getScene().setRoot(root);
     primaryStage.show();    
     
+  }
+  
+  @FXML
+  void search(ActionEvent event) throws IOException {
+    if (search.getText() != null) {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(getClass().getResource("/view/Search.fxml"));
+      AnchorPane root = (AnchorPane)loader.load();
+      
+      SearchController searchController = loader.getController();
+      
+      searchController.setAlbum(album);
+      searchController.setInput(search.getText());
+      searchController.setPreviousWindow("album");
+      searchController.setClipboard(clipboard);
+      searchController.start(primaryStage);
+      
+      primaryStage.getScene().setRoot(root);
+      primaryStage.show();  
+    }
+      
   }
 
 @FXML

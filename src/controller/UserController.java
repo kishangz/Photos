@@ -236,7 +236,7 @@ public class UserController {
     
     albumController.setUser(user);
     albumController.setAlbum(table.getSelectionModel().getSelectedItem());
-    //albumController.setClipboard(clipboard);
+    albumController.setClipboard(clipboard);
     albumController.start(primaryStage);
     
     primaryStage.getScene().setRoot(root);
@@ -323,6 +323,7 @@ public class UserController {
     
     
     searchController.setClipboard(clipboard);
+    searchController.setInput(search.getText());
     searchController.setPreviousWindow("user");
     searchController.start(primaryStage);
     

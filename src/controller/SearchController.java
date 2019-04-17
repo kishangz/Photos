@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -22,7 +23,7 @@ public class SearchController {
   
   @FXML private Hyperlink logout;
   
-  @FXML private Label headerLabel;
+  @FXML private Label searchLabel;
   
   @FXML private Button back; 
 
@@ -33,9 +34,17 @@ public class SearchController {
   private Photo clipboard;
 
   private Album album;
+
+  private String input;
+  
+  @FXML private TextField tagSearchField;
   
   public void start(Stage primaryStage) {   
     this.primaryStage = primaryStage; 
+    
+    searchLabel.setText("Results for \"" + input + "\":");
+    
+    searchByTags(input);
     
     primaryStage.setOnCloseRequest(event -> {     
       
@@ -49,6 +58,10 @@ public class SearchController {
     });
   }
   
+  public void setInput(String input) {   
+    this.input = input;    
+  }
+  
   public void setPreviousWindow(String previousWindow) {   
     this.previousWindow = previousWindow;    
   } 
@@ -60,6 +73,19 @@ public class SearchController {
   public void setClipboard(Photo clipboard) {   
     this.clipboard = clipboard;    
   } 
+  
+  @FXML
+  void tagSearch(ActionEvent event) {
+    searchByTags(tagSearchField.getText());
+
+  }
+  
+  private void searchByTags(String input) {
+    if (!input.equals("")) {
+      
+    }
+
+  }
   
   @FXML
   void createAlbum(ActionEvent event) {
@@ -85,7 +111,7 @@ public class SearchController {
       
       
       albumController.setAlbum(album);      
-      //albumController.setClipboard(clipboard);
+      albumController.setClipboard(clipboard);
       albumController.start(primaryStage);
       
       primaryStage.getScene().setRoot(root);
