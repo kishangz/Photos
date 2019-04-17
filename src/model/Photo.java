@@ -101,7 +101,7 @@ public class Photo implements Serializable {
 	}
 	
 	public String getDateFormat() {
-		DateFormat df = new SimpleDateFormat("MM/dd/yyyy-HH:mm:ss");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		return df.format(this.calendar.getTime());
 		
 	}

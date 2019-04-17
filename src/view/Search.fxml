@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -46,7 +47,7 @@
             </Label>
             <GridPane GridPane.columnIndex="1" GridPane.rowIndex="3">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="250.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="220.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="499.0" />
               </columnConstraints>
               <rowConstraints>
@@ -54,14 +55,19 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <TextField fx:id="tagSearchField" maxWidth="-Infinity" onAction="#tagSearch" prefWidth="200.0" promptText="city=Boston AND event=concert" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                  <DatePicker fx:id="endDate" prefWidth="200.0" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                     <GridPane.margin>
+                        <Insets top="243.0" />
+                     </GridPane.margin>
+                  </DatePicker>
+                  <TextField fx:id="tagSearchField" maxWidth="-Infinity" onAction="#tagSearch" prefWidth="200.0" promptText="type=value [AND/OR] type=value" GridPane.rowIndex="1" GridPane.valignment="TOP">
                      <GridPane.margin>
                         <Insets top="36.0" />
                      </GridPane.margin>
                   </TextField>
                   <Label fx:id="searchLabel" alignment="BASELINE_LEFT" text="Results for &quot;search terms&quot;:" textFill="#212122" GridPane.columnIndex="1">
                      <font>
-                        <Font name="Arial" size="14.0" />
+                        <Font name="Arial" size="12.0" />
                      </font>
                   </Label>
                   <Label fx:id="headerLabel11" alignment="BASELINE_LEFT" text="By Tags" textFill="#2a2a94" GridPane.rowIndex="1" GridPane.valignment="TOP">
@@ -84,6 +90,40 @@
                      </content>
                   </ScrollPane>
                   <Button fx:id="createAlbum" mnemonicParsing="false" onAction="#createAlbum" text="Create Album" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
+                  <Label fx:id="headerLabel111" alignment="BASELINE_LEFT" text="By Date" textFill="#2a2a94" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                     <font>
+                        <Font name="Arial" size="14.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets top="121.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <DatePicker fx:id="fromDate" prefWidth="200.0" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                     <GridPane.margin>
+                        <Insets top="183.0" />
+                     </GridPane.margin>
+                  </DatePicker>
+                  <Label fx:id="searchLabel1" alignment="BASELINE_LEFT" text="Photos taken between" textFill="#212122" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                     <font>
+                        <Font name="Arial" size="12.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets top="157.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label fx:id="searchLabel11" alignment="BASELINE_LEFT" text="and" textFill="#212122" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                     <font>
+                        <Font name="Arial" size="12.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets top="218.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Button fx:id="dateSearch" mnemonicParsing="false" onAction="#dateSearch" prefWidth="60.0" text="Search" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                     <GridPane.margin>
+                        <Insets left="140.0" top="283.0" />
+                     </GridPane.margin>
+                  </Button>
                </children>
             </GridPane>
          </children>
