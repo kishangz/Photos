@@ -42,51 +42,111 @@ import model.Tag;
 import model.User;
 import model.UsersList;
 
+/**
+ * This is the Controller for Photo
+ * It has all the functionality for Photo GUI
+ * @author Kishan Zalora Eyob Tesfaye
+ *
+ */
 public class PhotoController {
 	
+	/**
+	 * Imageview to view an Image
+	 */
 	@FXML private ImageView imageView;
 	
+	/**
+	 * TextArea to display the caption
+	 */
 	@FXML private TextArea isCaptioned;
 	
 	/**
-     * previous button
+     * Previous button
      */
 	@FXML private Button prev;
 	/**
-     * next button
+     * Next button
      */
 	@FXML private Button next;
 	
+	/**
+	 * Logout button
+	 */
 	@FXML private Hyperlink logout;
 	
-	//@FXML private ObservableList<Tag> obsList;
-	
+	/**
+	 * Back button
+	 */
 	@FXML private Button back; 
 	
+	/**
+	 * Add tag Button
+	 */
 	@FXML private Button addTag; 
 	
+	/**
+	 * Delete tag button
+	 */
 	@FXML private Button deleteTag; 
 	
+	/**
+	 * Table column of Tag
+	 */
 	@FXML TableColumn<Tag, String> tableCol;
-
+	
+	/**
+	 * Value column of Tag
+	 */
 	@FXML TableColumn<Tag, String> valueCol; 
 	
+	/**
+	 * Tableview for Tag
+	 */
 	@FXML private TableView<Tag> table1;
 	
+	/**
+	 * Date label
+	 */
 	@FXML private Label date;
 
+	/**
+	 * Primary Stage
+	 */
 	private Stage primaryStage;
 	
+	/**
+	 * ArrayList of Photo
+	 */
 	private ArrayList<Photo> thisPhotoList;
 	
+	/**
+	 * ArrayList of Tag
+	 */
 	private ArrayList<Tag> tagsList;
 	
+	/**
+	 * Album Prev
+	 */
 	private Album prevAlbum;
 	
+	/**
+	 * Observable list of Tag
+	 */
 	private ObservableList<Tag> obsList = FXCollections.observableArrayList();
 	
+	/**
+	 * int i
+	 */
 	private int i = 0; 
 	
+	/**
+	 * This is the Start method that initializes
+	 * everything for the Photo interface
+	 * @param primaryStage
+	 * @param PhotoList
+	 * @param caption
+	 * @throws Exception
+	 */
 	public void start(Stage primaryStage, ArrayList<Photo> PhotoList, String caption) throws Exception {
 		
 		this.primaryStage = primaryStage;
@@ -127,11 +187,19 @@ public class PhotoController {
 		
 	}
 	
+	/**
+	 * Sets tagList
+	 * @param tagsList
+	 */
 	public void setTagsList(ArrayList<Tag> tagsList)
 	{
 		this.tagsList = tagsList;
 	}
-
+	
+	/**
+	 * Button that changes picture to previous and next
+	 * @param album
+	 */
 	public void setAlbum(Album album) {   
 	    this.prevAlbum = album;    
 	  }
@@ -187,14 +255,21 @@ public class PhotoController {
 			}
 
 		}
-
 		
+		/**
+		 * Set Image in view
+		 * @param itsImage
+		 */
 	public void setImageInView(Image itsImage)
 	{
 		this.imageView.setImage(itsImage);
 	}
 	
-	
+	/**
+	 * Back Button that takes the user back to the Album page
+	 * @param ae
+	 * @throws IOException
+	 */
 	 @FXML
 	  private void back(ActionEvent ae) throws IOException {
 	    try {
@@ -213,17 +288,19 @@ public class PhotoController {
 	    albumController.setUser(LoginController.currUser);
 	    albumController.setAlbum(this.prevAlbum);
 	    albumController.start(primaryStage);
-	    //albumController.start(primaryStage);
 	    
 	    primaryStage.getScene().setRoot(root);
 	    primaryStage.show();    
 	    
 	  }
 	 
-	 
+	 /**
+	  * Adds tag for a selectes picture
+	  * @param ae
+	  * @throws IOException
+	  */
 	 @FXML private void addTag(ActionEvent ae) throws IOException{
 		 
-		 //System.out.print(thisPhotoList.size());
 		 if(thisPhotoList.isEmpty())
 			{
 				Alert alert2 = new Alert(AlertType.INFORMATION);
@@ -293,8 +370,6 @@ public class PhotoController {
 				    {
 				    	
 				    	Photo currAlbumString = thisPhotoList.get(i);
-				    	//Album currAlbum = LoginController.currUser.getAlbumList().get(prevAlbum.getName());
-				    	//Photo currPhoto = currAlbum.getListOfPhotos();
 				    	model.Tag tempTag = new model.Tag(tagType, tagValue);
 
 				    	if(currAlbumString.getTags().contains(tempTag))
@@ -308,10 +383,6 @@ public class PhotoController {
 				    	else 
 				    	{
 				    		LoginController.currUser.getAlbumList().get(prevAlbum.getName()).getListOfPhotos().get(currAlbumString.getPhotoName()).addTag(tempTag);
-				    		//currAlbumString.addTag(tempTag);
-				    		System.out.println(tagType);
-						    System.out.println(tagValue);
-						    System.out.println(tempTag);
 				    		obsList.add(tempTag);
 				    		table1.setItems(obsList);
 				    		tableCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getType()));
@@ -323,6 +394,10 @@ public class PhotoController {
 			} 
 	 }
 	 
+	 /**
+	  * Deleted a selected tag for a given picture
+	  * @param event
+	  */
 	  @FXML
 	  void deleteTag (ActionEvent event) {
 	    Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure that you want to delete this album?");
@@ -339,7 +414,14 @@ public class PhotoController {
 	    }
 
 	  }
-	 
+	  
+	  /**
+	   * Prompt that asks if you wish to logout and
+	   * takes the user to the login page to log back
+	   * in before exiting the program
+	   * @param ae
+	   * @throws IOException
+	   */
 	 @FXML
 	  private void logout(ActionEvent ae) throws IOException {
 	    

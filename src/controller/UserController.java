@@ -42,72 +42,155 @@ import model.Photo;
 import model.User;
 import model.UsersList;
 
+/**
+ * This is the Controller for User
+ * It has all the functionality for User GUI
+ * @author Kishan Zalora Eyob Tesfaye
+ *
+ */
 public class UserController {
   
+	/**
+	 * Logout Button
+	 */
   @FXML private Hyperlink logout;
+  
+  /**
+   * rename Button
+   */
   @FXML private Button renameButton;  
 
-  @FXML
-  private Button delete;
+  /**
+   * Delete Button
+   */
+  @FXML private Button delete;
   
-  @FXML
-  private Button view;
+  /**
+   * View Button
+   */
+  @FXML private Button view;
 
-  @FXML
-  private Button add;
+  /**
+   * Add Button
+   */
+  @FXML private Button add;
   
+  /**
+   * Table View of table
+   */
+  @FXML private TableView<Album> table;
   
+  /**
+   * Album Column of Album
+   */
+  @FXML TableColumn<Album, String> albumCol;
 
-  @FXML
-  private TableView<Album> table;
+  /**
+   * Quantity Column of Album
+   */
+  @FXML TableColumn<Album, String> quantityCol;  
   
-  @FXML
-  TableColumn<Album, String> albumCol;
+  /**
+   * Earliest Date Column of Album
+   */
+  @FXML TableColumn<Album, String> earliestCol;
 
-  @FXML
-  TableColumn<Album, String> quantityCol;  
+  /**
+   * Latest Date Column of Album
+   */
+  @FXML TableColumn<Album, String> latestCol;  
   
-  @FXML
-  TableColumn<Album, String> earliestCol;
-
-  @FXML
-  TableColumn<Album, String> latestCol;  
-  
+  /**
+   * Photo clipboard
+   */
   private Photo clipboard = null;
   
+  /*
+   * Label for header
+   */
   @FXML private Label headerLabel;
   
+  /**
+   * Tilepane for pictures
+   */
   @FXML private TilePane pics; 
   
+  /**
+   * Stage PrimaryStage
+   */
   private Stage primaryStage;
+  
+  /**
+   * User user
+   */
   private User user;
   
+  /**
+   * File Array of photos
+   */
   File[] stockPhoto;
   
-  ListView<String> listView;   
+  /**
+   * Listview of String
+   */
+  ListView<String> listView;
+  
+  /**
+   * Observabke List of String
+   */
   ObservableList<String> obList; 
   
+  /**
+   * ArrayLsit of file
+   */
   ArrayList<File> fileStock = new ArrayList<File>(); 
   
+  /**
+   * Stack of ImageView
+   */
   private Stack<ImageView> imageStack = new Stack<ImageView>();
   
+  /**
+   * ArrayList of Photo
+   */
   private ArrayList<Photo> PhotoList = new ArrayList<Photo>();
+  
+  /**
+   * HashMap of User
+   */
   private HashMap<String, User> userList;
   
-  //private UsersList usersList;
-  
+  /**
+   * HashMap of Album
+   */
   private HashMap<String, Album> albumList; 
+  
+  /**
+   * Observable List of Album
+   */
   private ObservableList<Album> obsList = FXCollections.observableArrayList();
  
+  /**
+   * Sets Clipboard
+   * @param clipboard
+   */
   public void setClipboard(Photo clipboard) {   
     this.clipboard = clipboard;    
   } 
   
-  
+  /**
+   * Sets User List
+   * @param userList
+   */
   public void setUserList(HashMap<String, User> userList) {   
 	    this.userList = userList;    
 	  } 
 
+  /**
+   * This is the Start method that initializes
+   * everything for the User interface
+   * @param primaryStage
+   */
   public void start(Stage primaryStage) {   
     this.primaryStage = primaryStage; 
     
@@ -197,34 +280,10 @@ public class UserController {
   }
   
   /**
-   * Initializes fields every time this screen is loaded. Also loads in the albums
-   * from the user. 
+   * Goes to the album of the user logged in
+   * @param ae
+   * @throws IOException
    */
-  public void startU() {
-	  
-  }
-    
-  /*
-  
-  private void displayImages(String selectedItem) {
-		// TODO Auto-generated method stub
-		
-	}
-  
-  private void imageSelect(ImageView imageview) {
-	  
-	  	imageStack.push(imageview);
-		
-		int imageIndex = pics.getChildren().indexOf(imageview);
-		
-		Photo imagePhoto = PhotoList.get(imageIndex);
-
-}
-  */
-  
-  
- 
-  
   @FXML
   private void goToAlbum(ActionEvent ae) throws IOException {
     FXMLLoader loader = new FXMLLoader();
@@ -242,6 +301,10 @@ public class UserController {
     primaryStage.show();  
   }
   
+  /**
+   * Button that Adds an album 
+   * @param event
+   */
   @FXML
   void add(ActionEvent event) {
     TextInputDialog d = new TextInputDialog();
@@ -267,6 +330,11 @@ public class UserController {
     }
   }
 
+  /**
+   * Delete button that asks the user if they 
+   * wish to delete a picture before deleting it 
+   * @param event
+   */
   @FXML
   void delete(ActionEvent event) {
     Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure that you want to delete this album?");
@@ -281,6 +349,11 @@ public class UserController {
 
   }
   
+  /**
+   * Renames an album and check if an 
+   * album with that name already exists
+   * @param event
+   */
   @FXML
   void rename(ActionEvent event) {
     TextInputDialog d = new TextInputDialog();
@@ -311,6 +384,11 @@ public class UserController {
     }
   }
 
+  /**
+   * Search Button to search for tags and dates
+   * @param event
+   * @throws IOException
+   */
   @FXML
   void search(ActionEvent event) throws IOException {
     
@@ -329,7 +407,14 @@ public class UserController {
     primaryStage.show();  
 
   }
-
+  
+  /**
+   * Prompt that asks if you wish to logout and
+   * takes the user to the login page to log back
+   * in before exiting the program
+   * @param ae
+   * @throws IOException
+   */
   @FXML
   private void logout(ActionEvent ae) throws IOException {
     

@@ -17,23 +17,66 @@ import model.Photo;
 import model.User;
 import model.UsersList;
 
+/**
+ * This is the Controller for Login
+ * It has all the functionality for LoginGUI
+ * @author Kishan Zalora Eyob Tesfaye
+ *
+ */
 public class LoginController {
   
+	/**
+	 * Login Button
+	 */
   @FXML private Button loginButton;
+  
+  /**
+   * Login Field to enter the username
+   */
   @FXML private TextField loginField;
+  
+  /**
+   * Signup link to create an account
+   */
   @FXML private Hyperlink signUp;
+  
+  /**
+   * Error label for a wrong input
+   */
   @FXML private Label errorLabel;
   
+  /**
+   * primary Stage
+   */
   private Stage primaryStage;
   
+  /**
+   * Userentered string
+   */
   String userEntered;
   
+  /**
+   * User Current user
+   */
   protected static User currUser;
   
+  /**
+   * int counter
+   */
   public static int counter = 0;
  
+  /**
+   * userList
+   */
   public static UsersList userList;
   
+  /**
+   * This is the Start method that initializes
+   * everything for the login interface
+   * @param primaryStage
+   * @throws FileNotFoundException
+   * @throws IOException
+   */
   public void start(Stage primaryStage) throws FileNotFoundException, IOException {   
     this.primaryStage = primaryStage;
       
@@ -49,6 +92,11 @@ public class LoginController {
     
   }
   
+  /**
+   * Sets the UserList
+   * @throws FileNotFoundException
+   * @throws IOException
+   */
   public void setUserList() throws FileNotFoundException, IOException { 
     userList =  new UsersList();
     
@@ -60,7 +108,12 @@ public class LoginController {
      }  
   } 
   
-  
+  /**
+   * Login Button that checks if user 
+   * entered is either admin stock or an new user
+   * @param ae
+   * @throws IOException
+   */
   @FXML
   private void login(ActionEvent ae) throws IOException { 
 	  
@@ -125,6 +178,11 @@ public class LoginController {
     }
   }
   
+  /**
+   * Signup button that takes you to account page to make an account
+   * @param ae
+   * @throws IOException
+   */
   @FXML
   private void signUp(ActionEvent ae) throws IOException {
    

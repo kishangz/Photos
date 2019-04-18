@@ -45,64 +45,132 @@ import model.Photo;
 import model.User;
 import model.UsersList;
 
+/**
+ * This is the Controller for Album
+ * It has all the functionality for Album GUI
+ * @author Kishan Zalora Eyob Tesfaye
+ *
+ */
 public class AlbumController {
-  
+	
+	/**
+	 * Logout Button
+	 */
   @FXML private Hyperlink logout;
   
+  /**
+   * To display the album name
+   */
   @FXML private Label headerLabel;
   
+  /**
+   * Tile pane to display the pics in tiles
+   */
   @FXML private TilePane pics;
   
-  @FXML
-  private Button view;
+  /**
+   * VIew Button takes you to the photo
+   */
+  @FXML private Button view;
 
-  @FXML
-  private Button delete;
+  /**
+   * Delete button deletes the picture
+   */
+  @FXML private Button delete;
 
-  @FXML
-  private Button add;
+  /**
+   * Adds An picture
+   */
+  @FXML private Button add;
   
-  @FXML
-  private MenuItem cut;
+  /**
+   * Cuts a picture from an album
+   */
+  @FXML private MenuItem cut;
 
-  @FXML
-  private MenuItem copy;
+  /**
+   * Copys a picture to the album
+   */
+  @FXML private MenuItem copy;
 
-  @FXML
-  private MenuItem paste;
+  /**
+   * Pastes a picture in an album
+   */
+  @FXML private MenuItem paste;
   
+  /**
+   * Array of Photos
+   */
   File[] stockPhoto;
     
+  /**
+   * Observable List of String
+   */
   ObservableList<String> obsList; 
   
+  /**
+   * Sets the clipboard equals to null
+   */
   private Photo clipboard = null;
   
+  /**
+   * Array list of File
+   */
   ArrayList<File> fileStock = new ArrayList<File>(); 
   
+  /**
+   * Stack of Imageview 
+   */
   private Stack<ImageView> imageStack = new Stack<ImageView>();
-  
+  /**
+   * ArrayList of Photo
+   */
   private ArrayList<Photo> PhotoList = new ArrayList<Photo>();
   
+  /**
+   * Caption
+   */
   private String caption;
   
+  /**
+   * Back button
+   */
   @FXML private Button back; 
   
   private Stage primaryStage;
   private Album album;
   User user;
   
+  /**
+   * Sets the Ablum
+   * @param album
+   */
   public void setAlbum(Album album) {   
     this.album = album;    
   }
+  
+  /**
+   * Sets User
+   * @param user
+   */
   
   public void setUser(User user) {   
     this.user = user;         
   } 
   
+  /**
+   * Sets Clipboard
+   * @param clipboard
+   */
   public void setClipboard(Photo clipboard) {   
     this.clipboard = clipboard;    
   } 
 
+  /**
+   * This is the Start method that initializes
+   * everything for the Album interface
+   * @param primaryStage
+   */
   public void start(Stage primaryStage) {   
     this.primaryStage = primaryStage; 
     
@@ -122,6 +190,10 @@ public class AlbumController {
     });
   }
   
+  /**
+   * Adds an Picture to the album
+   * @param event
+   */
   @FXML
   void add(ActionEvent event) {
     FileChooser f = new FileChooser();
@@ -172,6 +244,10 @@ public class AlbumController {
     }
   }
 
+  /**
+   * Deletes an picture from the album
+   * @param event
+   */
   @FXML
   void delete(ActionEvent event) {
 	  
@@ -201,7 +277,10 @@ public class AlbumController {
 		}	  
 
   }
-  
+  /**
+   * Copies a picture from the Album
+   * @param event
+   */
   @FXML
   void copy(ActionEvent event) {
     
@@ -211,6 +290,10 @@ public class AlbumController {
     
   }
 
+  /**
+   * Cuts an picture from the Album
+   * @param event
+   */
   @FXML
   void cut(ActionEvent event) {
     
@@ -224,7 +307,10 @@ public class AlbumController {
     
   }
   
-  
+  /**
+   * Pastes an picture to the Album
+   * @param event
+   */
   @FXML
   void paste(ActionEvent event) {
     if (clipboard != null) {
@@ -260,11 +346,15 @@ public class AlbumController {
 
   }
   
+  /**
+   * Views an selected picture from the album in an separate window
+   * @param event
+   * @throws IOException
+   */
   @FXML
   void view(ActionEvent event) throws IOException {
 	  
 
-	  //JUST ADDED
     if (imageStack.isEmpty()) {
       return;
       
@@ -299,7 +389,10 @@ public class AlbumController {
 	    primaryStage.getScene().setRoot(root);
 	    primaryStage.show();
   }
-   
+   /**
+    * This will display the images on an album clicked
+    * @param album
+    */
   private void displayImages(String album)
 	{
 		
@@ -361,6 +454,10 @@ public class AlbumController {
 	}
   
 
+  /**
+   * This will Set the properties for an selected image
+   * @param imageView
+   */
   private void imageSelect(ImageView imageView) {
 	if (!imageStack.isEmpty()) {
 	  ImageView i = imageStack.pop();
@@ -372,7 +469,11 @@ public class AlbumController {
 	  dropShadow.setColor(Color.DODGERBLUE);
 	  imageView.setEffect(dropShadow);
 }
-  
+  /**
+   * Takes you back to the User window
+   * @param ae
+   * @throws IOException
+   */
   @FXML
   private void back(ActionEvent ae) throws IOException {
     try {
@@ -399,6 +500,11 @@ public class AlbumController {
     
   }
   
+  /**
+   * Input an Tag=Value to see the pics with tags and dates
+   * @param event
+   * @throws IOException
+   */
   @FXML
   void search(ActionEvent event) throws IOException {
     
@@ -419,6 +525,13 @@ public class AlbumController {
       
   }
 
+  /**
+   * Prompt that asks if you wish to logout and
+   * takes the user to the login page to log back
+   * in before exiting the program
+   * @param ae
+   * @throws IOException
+   */
 @FXML
   private void logout(ActionEvent ae) throws IOException {
     
