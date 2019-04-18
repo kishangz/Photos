@@ -10,10 +10,15 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.UsersList;
 
+/**
+ * Initalizes the main Login page
+ * @author Kishan Zalora @Eyob Tesfaye
+ */
 public class Photos extends Application {
   
-   
-  
+  /**
+   * Initalizes the main Login page
+   */
   @Override
   public void start(Stage primaryStage)
   throws IOException {

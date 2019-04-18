@@ -2,6 +2,11 @@ package model;
 
 import java.util.Comparator;
 
+/**
+ * This is the date Comparator
+ * @author Kishan Zalora Eyob Tesfaye
+ *
+ */
 public class DateComparator implements Comparator<Photo> {
 
 	/**

@@ -33,36 +33,87 @@ import model.Album;
 import model.Photo;
 import model.UsersList;
 
+/**
+ * This is the Controller for Search
+ * It has all the functionality for Search GUI
+ * @author Kishan Zalora Eyob Tesfaye
+ *
+ */
 public class SearchController {
   
+	/**
+	 * Logout Button
+	 */
   @FXML private Hyperlink logout;
   
+  /**
+   * Search Label
+   */
   @FXML private Label searchLabel;
   
+  /**
+   * Back Button
+   */
   @FXML private Button back; 
   
+  /**
+   * TilePane to display the Pictures
+   */
   @FXML
   private TilePane pics;
   
+  /**
+   * Stack of IamgeView
+   */
   private Stack<ImageView> imageStack = new Stack<ImageView>();
 
+  /**
+   * Stage primaryStage
+   */
   private Stage primaryStage;
 
+  /**
+   * String Previous Window
+   */
   private String previousWindow;
   
+  /**
+   * Date Picker end date
+   */
   @FXML
   private DatePicker endDate;
+  
+  /**
+   * Date picker from Date
+   */
   @FXML
   private DatePicker fromDate;
   
+  /**
+   * Photo Clipboard
+   */
   private Photo clipboard;
 
+  /**
+   * Album album
+   */
   private Album album;
   
+  /**
+   * Arraylist of photo
+   */
   private ArrayList<Photo> results = new ArrayList<Photo>();
   
+  /**
+   * Textfiedld for searching tags
+   */
   @FXML private TextField tagSearchField;
   
+  /**
+   * This is the Start method that initializes
+   * everything for the search interface
+   * @param primaryStage
+   */
   public void start(Stage primaryStage) {   
     this.primaryStage = primaryStage; 
     
@@ -79,18 +130,34 @@ public class SearchController {
     });
   }  
   
+  /**
+   * Sets previous window
+   * @param previousWindow
+   */
   public void setPreviousWindow(String previousWindow) {   
     this.previousWindow = previousWindow;    
   } 
   
+  /**
+   * Sets album
+   * @param album
+   */
   public void setAlbum(Album album) {   
     this.album = album;    
   }  
   
+  /**
+   * sets clipboard
+   * @param clipboard
+   */
   public void setClipboard(Photo clipboard) {   
     this.clipboard = clipboard;    
   } 
   
+  /**
+   * Tag Search button
+   * @param event
+   */
   @FXML
   void tagSearch(ActionEvent event) {
     pics.getChildren().clear();
@@ -257,6 +324,11 @@ public class SearchController {
 
   }
 
+  /**
+   * Selects an image and displays it
+   * @param imageView
+   */
+  
   private void imageSelect(ImageView imageView) {
     if (!imageStack.isEmpty()) {
       ImageView i = imageStack.pop();
@@ -269,6 +341,10 @@ public class SearchController {
     imageView.setEffect(dropShadow);
   }
   
+  /**
+   * Search for the dates given the range
+   * @param event
+   */
   @FXML
   void dateSearch(ActionEvent event) {
     pics.getChildren().clear();
@@ -332,6 +408,11 @@ public class SearchController {
     }
   }  
   
+  /**
+   * Creates an album 
+   * @param event
+   * @throws IOException
+   */
   @FXML
   void createAlbum(ActionEvent event) throws IOException {
     TextInputDialog d = new TextInputDialog();
@@ -376,6 +457,11 @@ public class SearchController {
 
   }
   
+  /**
+   * Goes back to previous window the user was in 
+   * @param ae
+   * @throws IOException
+   */
   @FXML
   private void back(ActionEvent ae) throws IOException {
     try {
@@ -417,6 +503,13 @@ public class SearchController {
     
   }
   
+  /**
+   * Prompt that asks if you wish to logout and
+   * takes the user to the login page to log back
+   * in before exiting the program
+   * @param ae
+   * @throws IOException
+   */
   @FXML
   private void logout(ActionEvent ae) throws IOException {
     

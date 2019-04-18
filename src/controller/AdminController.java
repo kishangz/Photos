@@ -24,21 +24,44 @@ import javafx.stage.Stage;
 import model.User;
 import model.UsersList;
 
+/**
+ * This is the controller for the Admin it has
+ * all the functionality for the Admin GUI.
+ * @author Kishan Zalora Eyob Tesfaye
+ */
 public class AdminController {
-  
+  /**
+   * Logout button
+   */
   @FXML private Hyperlink logout;
-  @FXML
-  private Button deleteButton;
-
-  @FXML
-  private Button addButton;
+  
+  /**
+   * Delete User
+   */
+  @FXML private Button deleteButton;
+  
+  /**
+   * Add User
+   */
+  @FXML private Button addButton;
   
   private Stage primaryStage;
   
+  /**
+   * Observable List of String
+   */
   private ObservableList<String> obsList = FXCollections.observableArrayList();  
+  
+  /**
+   * ListView to display the users
+   */
   @FXML private ListView<String> listView;
   
-
+/**
+ * This is the Start method that initializes
+ * everything for the Admin interface
+ * @param primaryStage
+ */
   public void start(Stage primaryStage) {   
     this.primaryStage = primaryStage;   
     Set<String> set = LoginController.userList.getUserList().keySet();
@@ -76,6 +99,11 @@ public class AdminController {
     
   }
   
+  /**
+   * Adds a user if it doesnt exist
+   * @param event
+   * @throws IOException
+   */
   @FXML
   void add(ActionEvent event) throws IOException {
     FXMLLoader loader = new FXMLLoader();
@@ -92,6 +120,10 @@ public class AdminController {
     
   }
 
+  /**
+   * Deletes a user from the listt
+   * @param event
+   */
   @FXML
   void delete(ActionEvent event) {
     Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure that you want to delete this user?");
@@ -104,8 +136,14 @@ public class AdminController {
         obsList.remove(listView.getSelectionModel().getSelectedItem());
     }
   }
-	
-
+  
+  /**
+   * Prompt that asks if you wish to logout and
+   * takes the user to the login page to log back
+   * in before exiting the program
+   * @param ae
+   * @throws IOException
+   */
   @FXML
   private void logout(ActionEvent ae) throws IOException {
     

@@ -18,19 +18,43 @@ import javafx.stage.Stage;
 import model.User;
 import model.UsersList;
 
-
+/**
+ * This is the Controller for Account
+ * It has all the functionality for Account GUI
+ * @author Kishan Zalora Eyob Tesfaye
+ *
+ */
 public class AccountController {
-  
+	
+  /**
+   * Submit Buuton
+   */
   @FXML private Button submitButton;
+  
+  /**
+   * Text Field to input user name
+   */
   @FXML private TextField accountField;
+  
+  /**
+   * Cancel button
+   */
   @FXML private Button cancelButton;
+  
+  /**
+   * Label to display the wrong inputs
+   */
   @FXML private Label errorLabel;
   
   private Stage primaryStage;
-  
-  //private static UsersList userList = new UsersList();
+ 
   private String previousWindow;
 
+  /**
+   * This is the Start method that initializes
+   * everything for the account interface
+   * @param primaryStage
+   */
   public void start(Stage primaryStage) {   
     this.primaryStage = primaryStage;  
     
@@ -47,11 +71,20 @@ public class AccountController {
   }
   
   
-  
+  /**
+   * Sets the previous window
+   * @param previousWindow
+   */
   public void setPreviousWindow(String previousWindow) {   
     this.previousWindow = previousWindow;    
   } 
   
+  /**
+   * Creates Account by taking 
+   * the user name from the textfield
+   * @param ae
+   * @throws IOException
+   */
   @FXML
   void createAccount(ActionEvent ae) throws IOException {
     if (LoginController.userList.getUser(accountField.getText().trim()) == null) {
@@ -102,6 +135,12 @@ public class AccountController {
     }
   }
   
+  /**
+   * Goes back to the previous window
+   * when cancel button is pressed
+   * @param event
+   * @throws IOException
+   */
   @FXML
   void cancel(ActionEvent event) throws IOException {
     if (previousWindow.equals("login")) {
