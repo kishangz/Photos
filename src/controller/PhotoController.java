@@ -28,6 +28,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.Image;
@@ -74,6 +75,8 @@ public class PhotoController {
 	@FXML private TableView<Tag> table1;
 	
 	@FXML private Label date;
+	
+	Photo currPhoto = null;
 
 	private Stage primaryStage;
 	
@@ -81,35 +84,48 @@ public class PhotoController {
 	
 	private ArrayList<Tag> tagsList;
 	
-	private Album prevAlbum;
+	private Album album;
+	
+	@FXML
+    private Button editCaption;
+	@FXML
+    private Label captionLabel;
+
+    @FXML
+    private Label dateLabel;
+    
+    
+
+    @FXML
+    void editCaption(ActionEvent event) {
+
+    }
+
 	
 	private ObservableList<Tag> obsList = FXCollections.observableArrayList();
 	
 	private int i = 0; 
 	
-	public void start(Stage primaryStage, ArrayList<Photo> PhotoList, String caption) throws Exception {
+	public void start(Stage primaryStage, ArrayList<Photo> PhotoList) throws Exception {
 		
 		this.primaryStage = primaryStage;
-		isCaptioned.setText(caption);
 		
-		isCaptioned.setEditable(false);
-		obsList = FXCollections.observableArrayList(tagsList);
-		table1.setItems(obsList);
-		tableCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getType()));
-		valueCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getValue()));
-		
-		if(PhotoList.isEmpty()) {
-			System.out.println("its empty boss");
-		}
-		else {
+	
 			thisPhotoList = PhotoList;
-			/**Photo keyPhoto = thisPhotoList.get(i);
+			i = thisPhotoList.indexOf(currPhoto);
+			Photo keyPhoto = thisPhotoList.get(i);
 			File photoFile = keyPhoto.getFile();
 			Image image = new Image(photoFile.toURI().toString());
 			imageView.setImage(image);
-			//System.out.print(thisPhotoList.size());**/	
-		
-		}
+			captionLabel.setText(keyPhoto.getCaption());
+			dateLabel.setText(keyPhoto.getDate());
+			
+			tagsList = keyPhoto.getTags();
+			
+			obsList.addAll(tagsList);
+			table1.setItems(obsList);
+	        tableCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getType()));
+	        valueCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getValue()));
 		
 		
 		primaryStage.setOnCloseRequest(event -> {
@@ -133,7 +149,7 @@ public class PhotoController {
 	}
 
 	public void setAlbum(Album album) {   
-	    this.prevAlbum = album;    
+	    this.album = album;    
 	  }
 		
 		@FXML void button (ActionEvent e) throws IOException
@@ -142,13 +158,8 @@ public class PhotoController {
 
 			if(pressed == prev)
 			{
-				if(i == 0)
-				{
-					/**Alert alert2 = new Alert(AlertType.INFORMATION);
-					alert2.setTitle("Information Dialog");
-					alert2.setHeaderText(null);
-					alert2.setContentText("How much back do you wanna go?!");
-					alert2.showAndWait();**/
+				if(i == 0) {
+		
 				  i = thisPhotoList.size() - 1;
 				}
 				else
@@ -161,20 +172,19 @@ public class PhotoController {
                 File photoFile = keyPhoto.getFile();
                 Image image = new Image(photoFile.toURI().toString());
                 imageView.setImage(image);
-			}
-			else if(pressed == next)
-			{
+                captionLabel.setText(keyPhoto.getCaption());
+                dateLabel.setText(keyPhoto.getDate());
+                tagsList = keyPhoto.getTags();
+                obsList.clear();
+                obsList.addAll(tagsList);
+                table1.setItems(obsList);
+                table1.refresh();
+			} else if (pressed == next) {
 				if(i == thisPhotoList.size()-1)
 				{
-					/**Alert alert2 = new Alert(AlertType.INFORMATION);
-					alert2.setTitle("Information Dialog");
-					alert2.setHeaderText(null);
-					alert2.setContentText("Alright thats it! Thats the end of your images!");
-					alert2.showAndWait();**/
+				
 				  i = 0;
-				}
-				else
-				{
+				}else {
 					i = i + 1;
 					
 				}
@@ -184,14 +194,23 @@ public class PhotoController {
                 Image image = new Image(photoFile.toURI().toString());
                 //System.out.println(keyPhoto.toString());
                 imageView.setImage(image);
+                captionLabel.setText(keyPhoto.getCaption());
+                dateLabel.setText(keyPhoto.getDate());
+                tagsList = keyPhoto.getTags();
+                obsList.clear();
+                obsList.addAll(tagsList);
+                table1.setItems(obsList);
+                table1.refresh();
 			}
 
 		}
 
 		
-	public void setImageInView(Image itsImage)
+	public void setImageInView(ImageView imageView)
 	{
-		this.imageView.setImage(itsImage);
+	    currPhoto = album.getListOfPhotos().get(imageView.getUserData());
+		
+		
 	}
 	
 	
@@ -211,7 +230,7 @@ public class PhotoController {
 	    AlbumController albumController = loader.getController();
 	    
 	    albumController.setUser(LoginController.currUser);
-	    albumController.setAlbum(this.prevAlbum);
+	    albumController.setAlbum(this.album);
 	    albumController.start(primaryStage);
 	    //albumController.start(primaryStage);
 	    
@@ -223,109 +242,93 @@ public class PhotoController {
 	 
 	 @FXML private void addTag(ActionEvent ae) throws IOException{
 		 
-		 //System.out.print(thisPhotoList.size());
-		 if(thisPhotoList.isEmpty())
-			{
-				Alert alert2 = new Alert(AlertType.INFORMATION);
-				alert2.setTitle("Information Dialog");
-				alert2.setHeaderText(null);
-				alert2.setContentText("click on the image first");
-				alert2.showAndWait();
-			}
-		 
-			else
-			{
-				// Create the custom dialog.
-				javafx.scene.control.Dialog<Pair<String, String>> dialog = new javafx.scene.control.Dialog<>();
-				dialog.setTitle("Add Tag");
-				dialog.setHeaderText("Tags must be in the form Type, Value. EX: location, Edison");
+	    TextInputDialog d = new TextInputDialog();
+	    d.setTitle("Add Tag");
+	    d.setHeaderText("Add Tag Type");
+	    d.setContentText("Enter type:");
+	    d.initOwner(primaryStage);
+	    
+	    Optional<String> result = d.showAndWait();
+	    if (result.isPresent()) {
+	      String tagType = result.get();
+	      
+	        TextInputDialog c = new TextInputDialog();
+	        c.setTitle("Add Tag");
+	        c.setHeaderText("Add Tag Value");
+	        c.setContentText("Enter value:");
+	        c.initOwner(primaryStage);
+	        
+	        Optional<String> result1 = c.showAndWait();
+	        if (result1.isPresent()) {
+	          String tagValue = result1.get();
+	          
+	          if(tagType.equalsIgnoreCase("") || tagValue.equalsIgnoreCase(""))
+              {
+                  Alert alert2 = new Alert(AlertType.INFORMATION);
+                  alert2.setTitle("Information Dialog");
+                  alert2.setHeaderText(null);
+                  alert2.setContentText("How lazy!? You gotta input both fields man!!");
+                  alert2.showAndWait();
+              }
+              else
+              {
+                  
+                  
+                  model.Tag tempTag = new model.Tag(tagType, tagValue);
+                  
 
-				// Set the button types.
-				ButtonType loginButtonType = new ButtonType("Add Tag", ButtonData.OK_DONE);
-				dialog.getDialogPane().getButtonTypes().addAll(loginButtonType);
+                  if(tagsList.contains(tempTag))
+                  {
+                      Alert alert2 = new Alert(AlertType.INFORMATION);
+                      alert2.setTitle("Information Dialog");
+                      alert2.setHeaderText(null);
+                      alert2.setContentText("you added this tag a loooooong time ago");
+                      alert2.showAndWait();
+                  }
+                  else 
+                  {
+                      tagsList.add(tempTag);
+                      obsList.clear();
+                      obsList.addAll(tagsList);
+                      table1.setItems(obsList);
+                      table1.refresh();
+                      
+                      
 
-				// Create the type and password value and fields.
-				GridPane grid = new GridPane();
-				grid.setHgap(10);
-				grid.setVgap(10);
-				grid.setPadding(new Insets(20, 150, 10, 10));
-
-				TextField type = new TextField();
-				type.setPromptText("Type");
-				TextField value = new TextField();
-				value.setPromptText("Value");
-
-				grid.add(new Label("Tag Type:"), 0, 0);
-				grid.add(type, 1, 0);
-				grid.add(new Label("Tag Value:"), 0, 1);
-				grid.add(value, 1, 1);
+                  }
+              }
+	          
+	          
+	          
+	          
+	          
+	          
+	          
+	        }
+	        
+	        
+	    }
 		
-				dialog.getDialogPane().setContent(grid);
-				
-				// Request focus on the username field by default.
-				Platform.runLater(() -> type.requestFocus());
 
-				// Convert the result to a username-password-pair when the login button is clicked.
-				dialog.setResultConverter(dialogButton -> {
-				    if (dialogButton == loginButtonType) {
-				        return new Pair<>(type.getText(), value.getText());
-				    }
-				    return null;
-				});
 				
-				Optional<Pair<String, String>> result = dialog.showAndWait();
-				//Add the tag
-				result.ifPresent(usernamePassword -> {
-					
-				    String tagType = usernamePassword.getKey().trim();
-				    String tagValue = usernamePassword.getValue().trim();
+				
+				
+			
+				
+				
+				
+				
+		
 				   
 				    
-				    if(tagType.equalsIgnoreCase("") || tagValue.equalsIgnoreCase(""))
-				    {
-						Alert alert2 = new Alert(AlertType.INFORMATION);
-						alert2.setTitle("Information Dialog");
-						alert2.setHeaderText(null);
-						alert2.setContentText("How lazy!? You gotta input both fields man!!");
-						alert2.showAndWait();
-				    }
-				    else
-				    {
-				    	
-				    	Photo currAlbumString = thisPhotoList.get(i);
-				    	//Album currAlbum = LoginController.currUser.getAlbumList().get(prevAlbum.getName());
-				    	//Photo currPhoto = currAlbum.getListOfPhotos();
-				    	model.Tag tempTag = new model.Tag(tagType, tagValue);
-
-				    	if(currAlbumString.getTags().contains(tempTag))
-				    	{
-				    		Alert alert2 = new Alert(AlertType.INFORMATION);
-				    		alert2.setTitle("Information Dialog");
-				    		alert2.setHeaderText(null);
-				    		alert2.setContentText("you added this tag a loooooong time ago");
-				    		alert2.showAndWait();
-				    	}
-				    	else 
-				    	{
-				    		LoginController.currUser.getAlbumList().get(prevAlbum.getName()).getListOfPhotos().get(currAlbumString.getPhotoName()).addTag(tempTag);
-				    		//currAlbumString.addTag(tempTag);
-				    		System.out.println(tagType);
-						    System.out.println(tagValue);
-						    System.out.println(tempTag);
-				    		obsList.add(tempTag);
-				    		table1.setItems(obsList);
-				    		tableCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getType()));
-				    		valueCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getValue()));
-
-				    	}
-				    }			    
-				});
+				    			    
+			
 			} 
-	 }
+	 
 	 
 	  @FXML
 	  void deleteTag (ActionEvent event) {
-	    Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure that you want to delete this album?");
+	    Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure that you want to delete this tag?");
 	    alert.initOwner(primaryStage);
 	            
 	    Optional<ButtonType> result = alert.showAndWait();
@@ -334,7 +337,7 @@ public class PhotoController {
 	    	Photo currAlbumString = thisPhotoList.get(i);
 	    	Tag temp = table1.getSelectionModel().getSelectedItem();
 	    	
-    		LoginController.currUser.getAlbumList().get(prevAlbum.getName()).getListOfPhotos().get(currAlbumString.getPhotoName()).deleteTag(temp);
+    		LoginController.currUser.getAlbumList().get(album.getName()).getListOfPhotos().get(currAlbumString.getPhotoName()).deleteTag(temp);
 	        obsList.remove(table1.getSelectionModel().getSelectedItem());
 	    }
 

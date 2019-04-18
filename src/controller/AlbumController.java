@@ -283,14 +283,16 @@ public class AlbumController {
 
 	  PhotoController listController = loader.getController();
 	  
-	  listController.setImageInView(popedImage.getImage());
+	  listController.setAlbum(this.album);
+	  
+	  listController.setImageInView(popedImage);
 	  
 	  listController.setTagsList(LoginController.currUser.getAlbumList().get(album.getName()).getListOfPhotos().get(imagePhoto.getPhotoName()).getTags());
 	  
-	  listController.setAlbum(this.album);
+	  
 	  
 	  try {
-			listController.start(primaryStage, PhotoList, caption);
+			listController.start(primaryStage, PhotoList);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
